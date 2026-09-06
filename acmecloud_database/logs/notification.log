@@ -1,0 +1,3 @@
+2026-08-14T13:00:00 INFO queue_depth queue=email depth=1200
+2026-08-14T13:05:00 WARN queue_depth queue=email depth=4800
+2026-08-14T13:08:00 ERROR worker_timeout queue=email

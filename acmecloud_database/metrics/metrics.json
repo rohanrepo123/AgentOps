@@ -1,0 +1,50 @@
+{
+  "svc-payment": {
+    "normal": {
+      "p95_latency_ms": 850,
+      "error_rate": 0.004,
+      "retry_rate": 0.004
+    },
+    "incident": {
+      "p95_latency_ms": 3200,
+      "error_rate": 0.087,
+      "retry_rate": 0.087
+    }
+  },
+  "svc-api": {
+    "normal": {
+      "p95_latency_ms": 900,
+      "error_rate": 0.006,
+      "retry_rate": 0.002
+    },
+    "incident": {
+      "p95_latency_ms": 4800,
+      "error_rate": 0.021,
+      "retry_rate": 0.003
+    }
+  },
+  "svc-auth": {
+    "normal": {
+      "p95_latency_ms": 400,
+      "error_rate": 0.003,
+      "retry_rate": 0.001
+    },
+    "incident": {
+      "p95_latency_ms": 520,
+      "error_rate": 0.118,
+      "retry_rate": 0.001
+    }
+  },
+  "svc-notification": {
+    "normal": {
+      "p95_latency_ms": 700,
+      "error_rate": 0.005,
+      "retry_rate": 0.004
+    },
+    "incident": {
+      "p95_latency_ms": 1100,
+      "error_rate": 0.031,
+      "retry_rate": 0.006
+    }
+  }
+}

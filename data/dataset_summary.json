@@ -1,0 +1,17 @@
+{
+  "services": 14,
+  "service_dependencies": 14,
+  "users": 150,
+  "subscriptions": 150,
+  "payments": 600,
+  "payment_attempts": 700,
+  "api_requests": 1608,
+  "metric_samples": 3535,
+  "log_entries": 1810,
+  "deployments": 82,
+  "incidents": 25,
+  "incident_events": 100,
+  "incident_evidence": 100,
+  "feature_flags": 8,
+  "runbooks": 5
+}

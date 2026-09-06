@@ -1,0 +1,5 @@
+2026-09-01T10:31:02 INFO payment_request transaction=txn-1007 service=payment
+2026-09-01T10:31:05 ERROR upstream_timeout transaction=txn-1007 provider=stripe
+2026-09-01T10:31:05 WARN retry_attempt=1 transaction=txn-1007
+2026-09-01T10:31:07 INFO charge_success transaction=txn-1007 provider_request=req-7007-retry1
+2026-09-01T10:31:08 INFO charge_success transaction=txn-1007 provider_request=req-7007-retry2

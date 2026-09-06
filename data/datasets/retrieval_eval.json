@@ -1,0 +1,143 @@
+[
+  {
+    "query_id": "RET-001",
+    "query": "Why could customers be charged twice after a payment timeout?",
+    "service": "payment",
+    "relevant_documents": [
+      "svc-payment",
+      "api-payment",
+      "rb-payment-timeout",
+      "ts-duplicate-payment",
+      "incident-inc-001",
+      "incident-inc-017"
+    ]
+  },
+  {
+    "query_id": "RET-002",
+    "query": "How should a payment timeout be investigated?",
+    "service": "payment",
+    "relevant_documents": [
+      "svc-payment",
+      "api-payment",
+      "rb-payment-timeout",
+      "ts-duplicate-payment",
+      "incident-inc-001",
+      "incident-inc-017"
+    ]
+  },
+  {
+    "query_id": "RET-003",
+    "query": "Why do authentication failures happen after key rotation?",
+    "service": "auth",
+    "relevant_documents": [
+      "svc-auth",
+      "api-auth",
+      "rb-auth-failure",
+      "ts-login-failure",
+      "incident-inc-003",
+      "incident-inc-011"
+    ]
+  },
+  {
+    "query_id": "RET-004",
+    "query": "How should API latency incidents be investigated?",
+    "service": "api_gateway",
+    "relevant_documents": [
+      "svc-api",
+      "rb-api-latency",
+      "ts-slow-api",
+      "incident-inc-002"
+    ]
+  },
+  {
+    "query_id": "RET-005",
+    "query": "What causes elevated API latency when a downstream service becomes slow?",
+    "service": "api_gateway",
+    "relevant_documents": [
+      "svc-api",
+      "arch-service-architecture",
+      "arch-dependency-graph",
+      "rb-api-latency",
+      "ts-slow-api",
+      "incident-inc-002"
+    ]
+  },
+  {
+    "query_id": "RET-006",
+    "query": "What should be checked when notification queues become saturated?",
+    "service": "notification",
+    "relevant_documents": [
+      "svc-notification",
+      "svc-worker",
+      "rb-notification-backlog",
+      "incident-inc-004"
+    ]
+  },
+  {
+    "query_id": "RET-007",
+    "query": "Why are invoice and password-reset emails delayed?",
+    "service": "notification",
+    "relevant_documents": [
+      "svc-notification",
+      "svc-worker",
+      "rb-notification-backlog",
+      "incident-inc-004"
+    ]
+  },
+  {
+    "query_id": "RET-008",
+    "query": "Why can subscription upgrades remain pending?",
+    "service": "subscription",
+    "relevant_documents": [
+      "svc-subscription",
+      "api-subscription",
+      "svc-webhook",
+      "rb-webhook-failure",
+      "incident-inc-005"
+    ]
+  },
+  {
+    "query_id": "RET-009",
+    "query": "How should webhook delivery failures be investigated?",
+    "service": "webhook",
+    "relevant_documents": [
+      "svc-webhook",
+      "api-webhook",
+      "rb-webhook-failure",
+      "ts-webhook-failure",
+      "incident-inc-005",
+      "incident-inc-018"
+    ]
+  },
+  {
+    "query_id": "RET-010",
+    "query": "What causes stale search results?",
+    "service": "search",
+    "relevant_documents": [
+      "svc-search",
+      "ts-search-lag",
+      "incident-inc-006",
+      "incident-inc-019"
+    ]
+  },
+{
+  "query_id": "RET-011",
+  "query": "How should object storage upload failures be investigated?",
+  "service": "storage",
+  "relevant_documents": [
+    "ts-storage-failures",
+    "incident-inc-007",
+    "incident-inc-020"
+  ]
+},
+{
+  "query_id": "RET-012",
+  "query": "What should we investigate when valid users receive unexpected 429 responses?",
+  "service": "rate-limit",
+  "relevant_documents": [
+    "incident-inc-010",
+    "incident-inc-023",
+    "arch-service-architecture"
+  ]
+}
+]

@@ -1,0 +1,4 @@
+2026-08-25T16:20:00 INFO request path=/v1/subscriptions latency_ms=210
+2026-08-25T16:22:00 WARN downstream_latency service=subscription latency_ms=2100
+2026-08-25T16:25:00 WARN downstream_latency service=subscription latency_ms=2450
+2026-08-25T16:28:00 ERROR request_timeout path=/v1/subscriptions
