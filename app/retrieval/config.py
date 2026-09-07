@@ -42,9 +42,11 @@ class RetrievalConfig:
 
     # Number of candidates retrieved before
     # optional reranking.
-    candidate_k: list[int] = field(
-    default_factory=lambda: [10, 15, 20, 30]
-)
+#     candidate_k: list[int] = field(
+#     default_factory=lambda: [10, 15, 20, 30]
+# )
+    #Now we find optimum configurations freeze it 
+    candidate_k = 20
 
     # ---------------------------------------------------------
     # Embeddings
@@ -82,7 +84,7 @@ class RetrievalConfig:
     # ---------------------------------------------------------
 
     use_metadata_filtering: bool = True
-    use_reranker: bool = False
+    use_reranker: bool = True
 
     # Diversification experiment
     use_diversification: bool = True

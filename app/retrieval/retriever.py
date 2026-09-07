@@ -52,7 +52,6 @@ class DocumentRetriever:
     def retrieve(
         self,
         query: str,
-        candidate_k:int,
         top_k: Optional[int] = None,
         service: Optional[str] = None,
         category: Optional[str] = None,
@@ -76,8 +75,7 @@ class DocumentRetriever:
 
         search_k = max(
             top_k,
-            candidate_k 
-              )
+            retrieval_config.candidate_k              )
 
         raw_results = (
             self.vector_store
@@ -96,10 +94,9 @@ class DocumentRetriever:
             if service is not None:
                 document_service = metadata.get('service')
                 related_services = metadata.get('related_services',[])
-
-            if (document_service != service
-                and service not in related_services):
-                continue
+                if (document_service != service
+                    and service not in related_services):
+                    continue
 
             if (
                 category is not None

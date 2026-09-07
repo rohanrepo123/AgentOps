@@ -30,7 +30,6 @@ class RetrievalPipeline:
 
     def retrieve(
         self,
-        candidate_k:int,
         query: str,
         top_k: int = 5,
         service: Optional[str] = None,
@@ -41,7 +40,6 @@ class RetrievalPipeline:
 
         response = self.retriever.retrieve(
             query=query,
-            candidate_k=candidate_k,
             top_k=top_k,
             service=service,
             category=category,
