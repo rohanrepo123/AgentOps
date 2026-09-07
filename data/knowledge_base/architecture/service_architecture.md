@@ -2,6 +2,7 @@
 document_id: arch-service-architecture
 category: architecture
 service: platform
+related_services: rate-limit
 document_type: service_architecture
 version: 2026.08
 ---

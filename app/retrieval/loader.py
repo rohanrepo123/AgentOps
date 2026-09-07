@@ -111,6 +111,18 @@ class KnowledgeBaseLoader:
         service = frontmatter.get(
             "service"
         )
+        related_services = frontmatter.get(
+            "related_services"
+        )
+
+        if related_services:
+            related_services = [
+                item.strip()
+                for item in related_services.split(",")
+                if item.strip()
+            ]
+        else:
+            related_services = []
 
         # Convert meaningless values to None.
         if service in {
@@ -130,6 +142,7 @@ class KnowledgeBaseLoader:
             "document_id": document_id,
             "category": category,
             "document_type": document_type,
+            "related_services": related_services,
         }
 
         if service:

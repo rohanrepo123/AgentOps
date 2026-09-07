@@ -1,3 +1,4 @@
+#Used for Document Retrieval during Query asking
 from __future__ import annotations
 
 from typing import Optional
@@ -13,7 +14,6 @@ from app.retrieval.schemas import (
     RetrievalResult,
 )
 from app.retrieval.vector_store import FAISSVectorStore
-
 
 class DocumentRetriever:
     """
@@ -93,10 +93,12 @@ class DocumentRetriever:
 
             metadata = document.metadata
 
-            if (
-                service is not None
-                and metadata.get("service") != service
-            ):
+            if service is not None:
+                document_service = metadata.get('service')
+                related_services = metadata.get('related_services',[])
+
+            if (document_service != service
+                and service not in related_services):
                 continue
 
             if (

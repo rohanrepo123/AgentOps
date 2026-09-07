@@ -531,3 +531,331 @@
   ]
 }
 ================================================================================
+{
+  "experiment": "diversified_retrieval",
+  "timestamp_utc": "2026-09-07T22:12:09.660430+00:00",
+  "embedding_model": "text-embedding-3-large",
+  "vector_store": "FAISS",
+  "configuration": {
+    "chunk_size": 500,
+    "chunk_overlap": 75,
+    "candidate_k": 10,
+    "top_k": 5,
+    "metadata_filtering": true,
+    "reranking": false,
+    "diversification": true,
+    "max_chunks_per_document": 1
+  },
+  "evaluation_queries": 1,
+  "metrics": {
+    "recall_at_1": 0.3333333333333333,
+    "recall_at_3": 0.3333333333333333,
+    "recall_at_5": 0.3333333333333333,
+    "precision_at_1": 1.0,
+    "precision_at_3": 1.0,
+    "precision_at_5": 1.0,
+    "hit_rate_at_1": 1.0,
+    "hit_rate_at_3": 1.0,
+    "hit_rate_at_5": 1.0,
+    "mrr": 1.0,
+    "mean_retrieval_latency_ms": 2359.325,
+    "p95_retrieval_latency_ms": 2359.325,
+    "diversity_at_1": 1.0,
+    "diversity_at_3": 1.0,
+    "diversity_at_5": 1.0
+  },
+  "notes": [
+    "Document diversification enabled.",
+    "Maximum one chunk per document in the first selection pass.",
+    "No reranker.",
+    "No query expansion."
+  ]
+}
+================================================================================
+{
+  "experiment": "diversified_retrieval",
+  "timestamp_utc": "2026-09-07T22:12:10.077819+00:00",
+  "embedding_model": "text-embedding-3-large",
+  "vector_store": "FAISS",
+  "configuration": {
+    "chunk_size": 500,
+    "chunk_overlap": 75,
+    "candidate_k": 15,
+    "top_k": 5,
+    "metadata_filtering": true,
+    "reranking": false,
+    "diversification": true,
+    "max_chunks_per_document": 1
+  },
+  "evaluation_queries": 1,
+  "metrics": {
+    "recall_at_1": 0.3333333333333333,
+    "recall_at_3": 0.3333333333333333,
+    "recall_at_5": 0.3333333333333333,
+    "precision_at_1": 1.0,
+    "precision_at_3": 1.0,
+    "precision_at_5": 1.0,
+    "hit_rate_at_1": 1.0,
+    "hit_rate_at_3": 1.0,
+    "hit_rate_at_5": 1.0,
+    "mrr": 1.0,
+    "mean_retrieval_latency_ms": 412.859,
+    "p95_retrieval_latency_ms": 412.859,
+    "diversity_at_1": 1.0,
+    "diversity_at_3": 0.5,
+    "diversity_at_5": 0.5
+  },
+  "notes": [
+    "Document diversification enabled.",
+    "Maximum one chunk per document in the first selection pass.",
+    "No reranker.",
+    "No query expansion."
+  ]
+}
+================================================================================
+{
+  "experiment": "diversified_retrieval",
+  "timestamp_utc": "2026-09-07T22:12:10.509360+00:00",
+  "embedding_model": "text-embedding-3-large",
+  "vector_store": "FAISS",
+  "configuration": {
+    "chunk_size": 500,
+    "chunk_overlap": 75,
+    "candidate_k": 20,
+    "top_k": 5,
+    "metadata_filtering": true,
+    "reranking": false,
+    "diversification": true,
+    "max_chunks_per_document": 1
+  },
+  "evaluation_queries": 1,
+  "metrics": {
+    "recall_at_1": 0.3333333333333333,
+    "recall_at_3": 0.6666666666666666,
+    "recall_at_5": 0.6666666666666666,
+    "precision_at_1": 1.0,
+    "precision_at_3": 1.0,
+    "precision_at_5": 1.0,
+    "hit_rate_at_1": 1.0,
+    "hit_rate_at_3": 1.0,
+    "hit_rate_at_5": 1.0,
+    "mrr": 1.0,
+    "mean_retrieval_latency_ms": 424.458,
+    "p95_retrieval_latency_ms": 424.458,
+    "diversity_at_1": 1.0,
+    "diversity_at_3": 0.6666666666666666,
+    "diversity_at_5": 0.6666666666666666
+  },
+  "notes": [
+    "Document diversification enabled.",
+    "Maximum one chunk per document in the first selection pass.",
+    "No reranker.",
+    "No query expansion."
+  ]
+}
+================================================================================
+{
+  "experiment": "diversified_retrieval",
+  "timestamp_utc": "2026-09-07T22:12:10.959393+00:00",
+  "embedding_model": "text-embedding-3-large",
+  "vector_store": "FAISS",
+  "configuration": {
+    "chunk_size": 500,
+    "chunk_overlap": 75,
+    "candidate_k": 30,
+    "top_k": 5,
+    "metadata_filtering": true,
+    "reranking": false,
+    "diversification": true,
+    "max_chunks_per_document": 1
+  },
+  "evaluation_queries": 1,
+  "metrics": {
+    "recall_at_1": 0.3333333333333333,
+    "recall_at_3": 0.6666666666666666,
+    "recall_at_5": 0.6666666666666666,
+    "precision_at_1": 1.0,
+    "precision_at_3": 1.0,
+    "precision_at_5": 1.0,
+    "hit_rate_at_1": 1.0,
+    "hit_rate_at_3": 1.0,
+    "hit_rate_at_5": 1.0,
+    "mrr": 1.0,
+    "mean_retrieval_latency_ms": 446.118,
+    "p95_retrieval_latency_ms": 446.118,
+    "diversity_at_1": 1.0,
+    "diversity_at_3": 0.6666666666666666,
+    "diversity_at_5": 0.5
+  },
+  "notes": [
+    "Document diversification enabled.",
+    "Maximum one chunk per document in the first selection pass.",
+    "No reranker.",
+    "No query expansion."
+  ]
+}
+================================================================================
+{
+  "experiment": "diversified_retrieval",
+  "timestamp_utc": "2026-09-07T22:20:27.697950+00:00",
+  "embedding_model": "BAAI/bge-small-en-v1.5",
+  "vector_store": "FAISS",
+  "configuration": {
+    "chunk_size": 500,
+    "chunk_overlap": 75,
+    "candidate_k": 10,
+    "top_k": 5,
+    "metadata_filtering": true,
+    "reranking": false,
+    "diversification": true,
+    "max_chunks_per_document": 1
+  },
+  "evaluation_queries": 12,
+  "metrics": {
+    "recall_at_1": 0.225,
+    "recall_at_3": 0.5125,
+    "recall_at_5": 0.5402777777777777,
+    "precision_at_1": 1.0,
+    "precision_at_3": 1.0,
+    "precision_at_5": 0.9833333333333334,
+    "hit_rate_at_1": 1.0,
+    "hit_rate_at_3": 1.0,
+    "hit_rate_at_5": 1.0,
+    "mrr": 1.0,
+    "mean_retrieval_latency_ms": 22.469916666666666,
+    "p95_retrieval_latency_ms": 17.176,
+    "diversity_at_1": 1.0,
+    "diversity_at_3": 0.9444444444444444,
+    "diversity_at_5": 0.8125
+  },
+  "notes": [
+    "Document diversification enabled.",
+    "Maximum one chunk per document in the first selection pass.",
+    "No reranker.",
+    "No query expansion."
+  ]
+}
+================================================================================
+{
+  "experiment": "diversified_retrieval",
+  "timestamp_utc": "2026-09-07T22:20:27.933790+00:00",
+  "embedding_model": "BAAI/bge-small-en-v1.5",
+  "vector_store": "FAISS",
+  "configuration": {
+    "chunk_size": 500,
+    "chunk_overlap": 75,
+    "candidate_k": 15,
+    "top_k": 5,
+    "metadata_filtering": true,
+    "reranking": false,
+    "diversification": true,
+    "max_chunks_per_document": 1
+  },
+  "evaluation_queries": 12,
+  "metrics": {
+    "recall_at_1": 0.225,
+    "recall_at_3": 0.5333333333333333,
+    "recall_at_5": 0.6027777777777777,
+    "precision_at_1": 1.0,
+    "precision_at_3": 1.0,
+    "precision_at_5": 0.9833333333333334,
+    "hit_rate_at_1": 1.0,
+    "hit_rate_at_3": 1.0,
+    "hit_rate_at_5": 1.0,
+    "mrr": 1.0,
+    "mean_retrieval_latency_ms": 17.6275,
+    "p95_retrieval_latency_ms": 21.474,
+    "diversity_at_1": 1.0,
+    "diversity_at_3": 0.9444444444444444,
+    "diversity_at_5": 0.7875
+  },
+  "notes": [
+    "Document diversification enabled.",
+    "Maximum one chunk per document in the first selection pass.",
+    "No reranker.",
+    "No query expansion."
+  ]
+}
+================================================================================
+{
+  "experiment": "diversified_retrieval",
+  "timestamp_utc": "2026-09-07T22:20:28.141587+00:00",
+  "embedding_model": "BAAI/bge-small-en-v1.5",
+  "vector_store": "FAISS",
+  "configuration": {
+    "chunk_size": 500,
+    "chunk_overlap": 75,
+    "candidate_k": 20,
+    "top_k": 5,
+    "metadata_filtering": true,
+    "reranking": false,
+    "diversification": true,
+    "max_chunks_per_document": 1
+  },
+  "evaluation_queries": 12,
+  "metrics": {
+    "recall_at_1": 0.225,
+    "recall_at_3": 0.5333333333333333,
+    "recall_at_5": 0.6166666666666667,
+    "precision_at_1": 1.0,
+    "precision_at_3": 1.0,
+    "precision_at_5": 0.9833333333333334,
+    "hit_rate_at_1": 1.0,
+    "hit_rate_at_3": 1.0,
+    "hit_rate_at_5": 1.0,
+    "mrr": 1.0,
+    "mean_retrieval_latency_ms": 15.752833333333333,
+    "p95_retrieval_latency_ms": 20.986,
+    "diversity_at_1": 1.0,
+    "diversity_at_3": 0.9444444444444444,
+    "diversity_at_5": 0.7958333333333334
+  },
+  "notes": [
+    "Document diversification enabled.",
+    "Maximum one chunk per document in the first selection pass.",
+    "No reranker.",
+    "No query expansion."
+  ]
+}
+================================================================================
+{
+  "experiment": "diversified_retrieval",
+  "timestamp_utc": "2026-09-07T22:20:28.362350+00:00",
+  "embedding_model": "BAAI/bge-small-en-v1.5",
+  "vector_store": "FAISS",
+  "configuration": {
+    "chunk_size": 500,
+    "chunk_overlap": 75,
+    "candidate_k": 30,
+    "top_k": 5,
+    "metadata_filtering": true,
+    "reranking": false,
+    "diversification": true,
+    "max_chunks_per_document": 1
+  },
+  "evaluation_queries": 12,
+  "metrics": {
+    "recall_at_1": 0.225,
+    "recall_at_3": 0.5333333333333333,
+    "recall_at_5": 0.6166666666666667,
+    "precision_at_1": 1.0,
+    "precision_at_3": 0.9444444444444444,
+    "precision_at_5": 0.9111111111111111,
+    "hit_rate_at_1": 1.0,
+    "hit_rate_at_3": 1.0,
+    "hit_rate_at_5": 1.0,
+    "mrr": 1.0,
+    "mean_retrieval_latency_ms": 16.214333333333332,
+    "p95_retrieval_latency_ms": 21.271,
+    "diversity_at_1": 1.0,
+    "diversity_at_3": 0.9305555555555556,
+    "diversity_at_5": 0.7638888888888888
+  },
+  "notes": [
+    "Document diversification enabled.",
+    "Maximum one chunk per document in the first selection pass.",
+    "No reranker.",
+    "No query expansion."
+  ]
+}
+================================================================================

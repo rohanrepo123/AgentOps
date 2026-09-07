@@ -51,12 +51,12 @@ class RetrievalConfig:
     # ---------------------------------------------------------
 
     # embedding_model: str = "gemini-embedding-001"
-#     embedding_model: str = (
-#     "BAAI/bge-small-en-v1.5"
-# )
     embedding_model: str = (
-    "text-embedding-3-large"
+    "BAAI/bge-small-en-v1.5"
 )
+#     embedding_model: str = (
+#     "text-embedding-3-large"
+# )
 #     embedding_model: str = (
 #     "text-embedding-3-small"
 # )
