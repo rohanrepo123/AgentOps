@@ -1,0 +1,82 @@
+{
+  "experiment": "diversified_retrieval",
+  "timestamp_utc": "2026-09-07T00:06:26.151967+00:00",
+  "embedding_model": "BAAI/bge-small-en-v1.5",
+  "vector_store": "FAISS",
+  "configuration": {
+    "chunk_size": 500,
+    "chunk_overlap": 75,
+    "candidate_k": 15,
+    "top_k": 5,
+    "metadata_filtering": true,
+    "reranking": false,
+    "diversification": true,
+    "max_chunks_per_document": 1
+  },
+  "evaluation_queries": 12,
+  "metrics": {
+    "recall_at_1": 0.19722222222222222,
+    "recall_at_3": 0.5055555555555555,
+    "recall_at_5": 0.575,
+    "precision_at_1": 0.9166666666666666,
+    "precision_at_3": 0.9166666666666666,
+    "precision_at_5": 0.9,
+    "hit_rate_at_1": 0.9166666666666666,
+    "hit_rate_at_3": 0.9166666666666666,
+    "hit_rate_at_5": 0.9166666666666666,
+    "mrr": 0.9166666666666666,
+    "mean_retrieval_latency_ms": 29.696416666666668,
+    "p95_retrieval_latency_ms": 21.332,
+    "diversity_at_1": 0.9166666666666666,
+    "diversity_at_3": 0.8611111111111112,
+    "diversity_at_5": 0.7041666666666667
+  },
+  "notes": [
+    "Document diversification enabled.",
+    "Maximum one chunk per document in the first selection pass.",
+    "No reranker.",
+    "No query expansion."
+  ]
+}
+================================================================================
+{
+  "experiment": "diversified_retrieval",
+  "timestamp_utc": "2026-09-07T01:52:53.598719+00:00",
+  "embedding_model": "BAAI/bge-small-en-v1.5",
+  "vector_store": "FAISS",
+  "configuration": {
+    "chunk_size": 500,
+    "chunk_overlap": 75,
+    "candidate_k": 15,
+    "top_k": 5,
+    "metadata_filtering": true,
+    "reranking": false,
+    "diversification": true,
+    "max_chunks_per_document": 1
+  },
+  "evaluation_queries": 12,
+  "metrics": {
+    "recall_at_1": 0.19722222222222222,
+    "recall_at_3": 0.5055555555555555,
+    "recall_at_5": 0.575,
+    "precision_at_1": 0.9166666666666666,
+    "precision_at_3": 0.9166666666666666,
+    "precision_at_5": 0.9,
+    "hit_rate_at_1": 0.9166666666666666,
+    "hit_rate_at_3": 0.9166666666666666,
+    "hit_rate_at_5": 0.9166666666666666,
+    "mrr": 0.9166666666666666,
+    "mean_retrieval_latency_ms": 28.80625,
+    "p95_retrieval_latency_ms": 18.132,
+    "diversity_at_1": 0.9166666666666666,
+    "diversity_at_3": 0.8611111111111112,
+    "diversity_at_5": 0.7041666666666667
+  },
+  "notes": [
+    "Document diversification enabled.",
+    "Maximum one chunk per document in the first selection pass.",
+    "No reranker.",
+    "No query expansion."
+  ]
+}
+================================================================================

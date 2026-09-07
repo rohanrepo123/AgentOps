@@ -135,7 +135,7 @@
   "query": "What should we investigate when valid users receive unexpected 429 responses?",
   "service": "rate-limit",
   "relevant_documents": [
-    "incident-inc-010",
+    "incident-inc-010", 
     "incident-inc-023",
     "arch-service-architecture"
   ]

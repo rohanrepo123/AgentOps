@@ -244,7 +244,8 @@ class KnowledgeBaseLoader:
             ),
         )
 
-data = KnowledgeBaseLoader(knowledge_base_dir=r'D:\Study_IIITN\CampusX\Project Agent\data')
-# data_fetch = data.load()
-# for data_1 in data_fetch:
-#     print(i.metadata['source'])
+# data = KnowledgeBaseLoader(knowledge_base_dir=r'D:\Study_IIITN\CampusX\Project Agent\data')
+# data_fetch = data._infer_document_type(directory_category='servces/',category='svices')
+# # for data_1 in data_fetch:
+#     # print(i.metadata['source'])
+# print(data_fetch)

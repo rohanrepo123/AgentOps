@@ -42,22 +42,22 @@ class RetrievalConfig:
 
     # Number of candidates retrieved before
     # optional reranking.
-    candidate_k: int = 10
+    candidate_k: int = 15
 
     # ---------------------------------------------------------
     # Embeddings
     # ---------------------------------------------------------
 
     # embedding_model: str = "gemini-embedding-001"
-#     embedding_model: str = (
-#     "BAAI/bge-small-en-v1.5"
-# )
+    embedding_model: str = (
+    "BAAI/bge-small-en-v1.5"
+)
 #     embedding_model: str = (
 #     "text-embedding-3-large"
 # )
-    embedding_model: str = (
-    "text-embedding-3-small"
-)
+#     embedding_model: str = (
+#     "text-embedding-3-small"
+# )
 # embeddings = GoogleGenerativeAIEmbeddings(
 #     model="gemini-embedding-001"
 # )
@@ -75,9 +75,16 @@ class RetrievalConfig:
     # Runtime options
     # ---------------------------------------------------------
 
-    use_reranker: bool = False
+    # ---------------------------------------------------------
+    # Retrieval improvements
+    # ---------------------------------------------------------
+
     use_metadata_filtering: bool = True
+    use_reranker: bool = False
 
-
+    # Diversification experiment
+    use_diversification: bool = True
+    max_chunks_per_document: int = 1
+    
 # Single shared configuration object
 retrieval_config = RetrievalConfig()

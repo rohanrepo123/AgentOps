@@ -54,3 +54,11 @@ class RetrievalPipeline:
         )
 
         return response
+
+# x= RetrievalPipeline()
+# z = x.retrieve(query="How should webhook delivery failures be investigated?",top_k=5,service="webhook").results
+# print(len(z),' \n')
+# # print(z[0].content,' \n')
+# p = z[0].document_id
+# for i in p:
+#     print(i)

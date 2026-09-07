@@ -4,6 +4,9 @@ from typing import Optional
 
 from langchain_community.vectorstores import FAISS
 
+from app.retrieval.diversifier import (
+    DocumentDiversifier,
+)
 from app.retrieval.config import retrieval_config
 from app.retrieval.schemas import (
     RetrievalResponse,
@@ -24,7 +27,11 @@ class DocumentRetriever:
         self,
         vector_store: Optional[FAISS] = None,
     ) -> None:
-
+        self.diversifier = DocumentDiversifier(
+        max_chunks_per_document=(
+            retrieval_config.max_chunks_per_document
+            )
+        )
         if vector_store is not None:
             self.vector_store = vector_store
 
@@ -49,23 +56,6 @@ class DocumentRetriever:
         service: Optional[str] = None,
         category: Optional[str] = None,
     ) -> RetrievalResponse:
-        """
-        Retrieve the most relevant document chunks.
-
-        Parameters
-        ----------
-        query:
-            Natural-language search query.
-
-        top_k:
-            Number of final results to return.
-
-        service:
-            Optional service-level filter.
-
-        category:
-            Optional document-category filter.
-        """
 
         if not query or not query.strip():
             raise ValueError(
@@ -83,40 +73,24 @@ class DocumentRetriever:
                 "top_k must be greater than 0."
             )
 
-        # ----------------------------------------------------
-        # Fetch more candidates when filtering is requested.
-        # This avoids losing relevant results before filtering.
-        # ----------------------------------------------------
-
         search_k = max(
             top_k,
-            retrieval_config.candidate_k
+            retrieval_config.candidate_k,
         )
 
-        # ----------------------------------------------------
-        # FAISS similarity search with scores
-        # ----------------------------------------------------
-
         raw_results = (
-            self.vector_store.similarity_search_with_score(
+            self.vector_store
+            .similarity_search_with_score(
                 query,
                 k=search_k,
             )
         )
 
-        results: list[RetrievalResult] = []
-
-        # ----------------------------------------------------
-        # Convert LangChain Documents into our own schema
-        # ----------------------------------------------------
+        candidates: list[RetrievalResult] = []
 
         for document, score in raw_results:
 
             metadata = document.metadata
-
-            # -----------------------------------------------
-            # Optional metadata filtering
-            # -----------------------------------------------
 
             if (
                 service is not None
@@ -130,46 +104,59 @@ class DocumentRetriever:
             ):
                 continue
 
-            result = RetrievalResult(
-                content=document.page_content,
-                score=float(score),
-                document_id=str(
-                    metadata.get(
-                        "document_id",
-                        "unknown",
-                    )
-                ),
-                source=str(
-                    metadata.get(
-                        "source",
-                        "unknown",
-                    )
-                ),
-                category=str(
-                    metadata.get(
-                        "category",
-                        "unknown",
-                    )
-                ),
-                document_type=str(
-                    metadata.get(
-                        "document_type",
-                        "unknown",
-                    )
-                ),
-                service=metadata.get(
-                    "service"
-                ),
-                chunk_id=metadata.get(
-                    "chunk_id"
-                ),
-                metadata=metadata,
+            candidates.append(
+                RetrievalResult(
+                    content=document.page_content,
+                    score=float(score),
+                    document_id=str(
+                        metadata.get(
+                            "document_id",
+                            "unknown",
+                        )
+                    ),
+                    source=str(
+                        metadata.get(
+                            "source",
+                            "unknown",
+                        )
+                    ),
+                    category=str(
+                        metadata.get(
+                            "category",
+                            "unknown",
+                        )
+                    ),
+                    document_type=str(
+                        metadata.get(
+                            "document_type",
+                            "unknown",
+                        )
+                    ),
+                    service=metadata.get(
+                        "service"
+                    ),
+                    chunk_id=metadata.get(
+                        "chunk_id"
+                    ),
+                    metadata=metadata,
+                )
             )
 
-            results.append(result)
+        # ---------------------------------------------------------
+        # Diversification
+        # ---------------------------------------------------------
 
-            if len(results) >= top_k:
-                break
+        if retrieval_config.use_diversification:
+
+            results = self.diversifier.diversify(
+                candidates,
+                top_k=top_k,
+            )
+
+        else:
+
+            results = candidates[:top_k]
+
 
         return RetrievalResponse(
             query=query,

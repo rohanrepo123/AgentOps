@@ -155,3 +155,28 @@ def mean_reciprocal_rank(
         return 0.0
 
     return sum(rankings) / len(rankings)
+
+def document_diversity_at_k(
+    retrieved_documents: list[str],
+    k: int,
+) -> float:
+    """
+    Fraction of unique documents among the actual top-k results.
+    Measures the fraction of unique documents among top-k results.
+
+    Example:
+        [A, B, B, C, D] → 4 unique documents / 5 results = 0.8
+    """
+
+    top_k = retrieved_documents[:k]
+    print(retrieved_documents)
+
+    if not top_k:
+        return 0.0
+
+    unique_documents = len(
+        set(top_k)
+    )
+    # print(unique_documents)
+
+    return unique_documents / len(top_k)

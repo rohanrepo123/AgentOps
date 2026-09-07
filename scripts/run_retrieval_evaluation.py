@@ -7,7 +7,9 @@ from pathlib import Path
 from app.evaluation.datasets import (
     load_retrieval_dataset,
 )
+
 from app.evaluation.metrics import (
+    document_diversity_at_k,
     hit_rate_at_k,
     mean_reciprocal_rank,
     precision_at_k,
@@ -26,9 +28,10 @@ RESULTS_PATH = (
     PROJECT_ROOT
     / "experiments"
     / "retrieval"
-    / "baseline"
+    / "diversification"
     / "results.jsonl"
 )
+
 
 DATASET_PATH = (
     PROJECT_ROOT
@@ -40,6 +43,10 @@ DATASET_PATH = (
 
 K_VALUES = [1, 3, 5]
 
+RESULTS_PATH.parent.mkdir(
+    parents=True,
+    exist_ok=True,
+)
 
 def validate_ground_truth(
     dataset,
@@ -165,7 +172,11 @@ def main() -> None:
         k: []
         for k in K_VALUES
     }
-
+    diversity_scores = {
+    k: []
+    for k in K_VALUES
+    }
+    
     reciprocal_ranks = []
 
     retrieval_latencies = []
@@ -220,6 +231,12 @@ def main() -> None:
                 )
             )
 
+            diversity_scores[k].append(
+            document_diversity_at_k(
+                retrieved_documents,
+                k,
+            )
+        )
         reciprocal_ranks.append(
             reciprocal_rank(
                 retrieved_documents,
@@ -276,6 +293,10 @@ def main() -> None:
                 f"{hit_scores[k][-1]:.3f}"
             )
 
+            print(
+            f"  Diversity@{k}: "
+            f"{diversity_scores[k][-1]:.3f}"
+            )
         print(
             f"  Reciprocal Rank: "
             f"{reciprocal_ranks[-1]:.3f}"
@@ -286,186 +307,87 @@ def main() -> None:
             f"{response.retrieval_time_ms:.3f} ms"
         )
 
-    # --------------------------------------------------------
+# --------------------------------------------------------
     # Aggregate report
     # --------------------------------------------------------
 
     print("\n")
     print("=" * 80)
-    print("BASELINE RESULTS")
+    print("DIVERSIFIED RESULTS")
     print("=" * 80)
 
     for k in K_VALUES:
+        mean_recall = statistics.mean(recall_scores[k])
+        mean_precision = statistics.mean(precision_scores[k])
+        mean_hit = statistics.mean(hit_scores[k])
+        mean_diversity = statistics.mean(diversity_scores[k])
 
-        mean_recall = statistics.mean(
-            recall_scores[k]
-        )
+        print(f"\nK = {k}")
+        print(f"  Recall@{k:<2}    = {mean_recall:.4f}")
+        print(f"  Precision@{k:<2} = {mean_precision:.4f}")
+        print(f"  HitRate@{k:<2}   = {mean_hit:.4f}")
+        print(f"  Diversity@{k:<2} = {mean_diversity:.4f}")
 
-        mean_precision = statistics.mean(
-            precision_scores[k]
-        )
-
-        mean_hit = statistics.mean(
-            hit_scores[k]
-        )
-
-        print(
-            f"\nK = {k}"
-        )
-
-        print(
-            f"  Recall@{k:<2}    = "
-            f"{mean_recall:.4f}"
-        )
-
-        print(
-            f"  Precision@{k:<2} = "
-            f"{mean_precision:.4f}"
-        )
-
-        print(
-            f"  HitRate@{k:<2}   = "
-            f"{mean_hit:.4f}"
-        )
-
-    print(
-        f"\nMRR = "
-        f"{mean_reciprocal_rank(reciprocal_ranks):.4f}"
-    )
-
-    print(
-        f"Mean Retrieval Latency = "
-        f"{statistics.mean(retrieval_latencies):.3f} ms"
-    )
+    mean_mrr = mean_reciprocal_rank(reciprocal_ranks)
+    mean_latency = statistics.mean(retrieval_latencies) if retrieval_latencies else 0.0
 
     if retrieval_latencies:
         sorted_latencies = sorted(retrieval_latencies)
         idx = max(0, int(0.95 * len(sorted_latencies)) - 1)
         p95_latency = sorted_latencies[idx]
-        print(f"P95 Retrieval Latency = {p95_latency:.3f} ms")
     else:
-        print("P95 Retrieval Latency = N/A (no data)")
+        p95_latency = 0.0
 
+    print(f"\nMRR = {mean_mrr:.4f}")
+    print(f"Mean Retrieval Latency = {mean_latency:.3f} ms")
+    print(f"P95 Retrieval Latency  = {p95_latency:.3f} ms")
     print("\n" + "=" * 80)
-        # --------------------------------------------------------
-    # Save experiment results
+
+    # --------------------------------------------------------
+    # Save experiment results (.jsonl format)
     # --------------------------------------------------------
 
-    RESULTS_PATH.parent.mkdir(
-        parents=True,
-        exist_ok=True,
-    )
-
-    mean_mrr = mean_reciprocal_rank(
-        reciprocal_ranks
-    )
-
-    mean_latency = statistics.mean(
-        retrieval_latencies
-    )
-
-    sorted_latencies = sorted(
-        retrieval_latencies
-    )
-
-    p95_index = max(
-        0,
-        int(
-            0.95
-            * len(sorted_latencies)
-        ) - 1,
-    )
-
-    p95_latency = sorted_latencies[
-        p95_index
-    ]
-
     results = {
-        "experiment": "baseline_retrieval",
-        "timestamp_utc": datetime.now(
-            timezone.utc
-        ).isoformat(),
-
-        "embedding_model": (
-            retrieval_config.embedding_model
-        ),
-
+        "experiment": "diversified_retrieval",
+        "timestamp_utc": datetime.now(timezone.utc).isoformat(),
+        "embedding_model": retrieval_config.embedding_model,
         "vector_store": "FAISS",
-
         "configuration": {
-            "chunk_size": (
-                retrieval_config.chunk_size
-            ),
-            "chunk_overlap": (
-                retrieval_config.chunk_overlap
-            ),
-            "candidate_k": (
-                retrieval_config.candidate_k
-            ),
-            "top_k": (
-                retrieval_config.top_k
-            ),
-            "metadata_filtering": (
-                retrieval_config
-                .use_metadata_filtering
-            ),
-            "reranking": (
-                retrieval_config
-                .use_reranker
-            ),
+            "chunk_size": retrieval_config.chunk_size,
+            "chunk_overlap": retrieval_config.chunk_overlap,
+            "candidate_k": retrieval_config.candidate_k,
+            "top_k": retrieval_config.top_k,
+            "metadata_filtering": retrieval_config.use_metadata_filtering,
+            "reranking": retrieval_config.use_reranker,
+            "diversification": retrieval_config.use_diversification,
+            "max_chunks_per_document": retrieval_config.max_chunks_per_document,
         },
-
         "evaluation_queries": len(dataset),
-
         "metrics": {
-            "recall_at_1": statistics.mean(
-                recall_scores[1]
-            ),
-            "recall_at_3": statistics.mean(
-                recall_scores[3]
-            ),
-            "recall_at_5": statistics.mean(
-                recall_scores[5]
-            ),
-
-            "precision_at_1": statistics.mean(
-                precision_scores[1]
-            ),
-            "precision_at_3": statistics.mean(
-                precision_scores[3]
-            ),
-            "precision_at_5": statistics.mean(
-                precision_scores[5]
-            ),
-
-            "hit_rate_at_1": statistics.mean(
-                hit_scores[1]
-            ),
-            "hit_rate_at_3": statistics.mean(
-                hit_scores[3]
-            ),
-            "hit_rate_at_5": statistics.mean(
-                hit_scores[5]
-            ),
-
+            "recall_at_1": statistics.mean(recall_scores[1]),
+            "recall_at_3": statistics.mean(recall_scores[3]),
+            "recall_at_5": statistics.mean(recall_scores[5]),
+            "precision_at_1": statistics.mean(precision_scores[1]),
+            "precision_at_3": statistics.mean(precision_scores[3]),
+            "precision_at_5": statistics.mean(precision_scores[5]),
+            "hit_rate_at_1": statistics.mean(hit_scores[1]),
+            "hit_rate_at_3": statistics.mean(hit_scores[3]),
+            "hit_rate_at_5": statistics.mean(hit_scores[5]),
             "mrr": mean_mrr,
-
-            "mean_retrieval_latency_ms": (
-                mean_latency
-            ),
-
-            "p95_retrieval_latency_ms": (
-                p95_latency
-            ),
+            "mean_retrieval_latency_ms": mean_latency,
+            "p95_retrieval_latency_ms": p95_latency,
+            "diversity_at_1": statistics.mean(diversity_scores[1]),
+            "diversity_at_3": statistics.mean(diversity_scores[3]),
+            "diversity_at_5": statistics.mean(diversity_scores[5]),
         },
-
         "notes": [
-            "Baseline retrieval configuration.",
+            "Document diversification enabled.",
+            "Maximum one chunk per document in the first selection pass.",
             "No reranker.",
             "No query expansion.",
-            "Current metadata filtering enabled.",
         ],
     }
+
     with RESULTS_PATH.open(
     "a",
     encoding="utf-8",

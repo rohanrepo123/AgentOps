@@ -106,4 +106,39 @@
     "Current metadata filtering enabled."
   ]
 }
+{
+  "experiment": "baseline_retrieval",
+  "timestamp_utc": "2026-09-06T22:27:18.822428+00:00",
+  "embedding_model": "BAAI/bge-small-en-v1.5",
+  "vector_store": "FAISS",
+  "configuration": {
+    "chunk_size": 500,
+    "chunk_overlap": 75,
+    "candidate_k": 10,
+    "top_k": 5,
+    "metadata_filtering": true,
+    "reranking": false
+  },
+  "evaluation_queries": 12,
+  "metrics": {
+    "recall_at_1": 0.19722222222222222,
+    "recall_at_3": 0.4847222222222222,
+    "recall_at_5": 0.5125,
+    "precision_at_1": 0.9166666666666666,
+    "precision_at_3": 0.9166666666666666,
+    "precision_at_5": 0.9,
+    "hit_rate_at_1": 0.9166666666666666,
+    "hit_rate_at_3": 0.9166666666666666,
+    "hit_rate_at_5": 0.9166666666666666,
+    "mrr": 0.9166666666666666,
+    "mean_retrieval_latency_ms": 19.31941666666667,
+    "p95_retrieval_latency_ms": 24.668
+  },
+  "notes": [
+    "Baseline retrieval configuration.",
+    "No reranker.",
+    "No query expansion.",
+    "Current metadata filtering enabled."
+  ]
+}
 ================================================================================
