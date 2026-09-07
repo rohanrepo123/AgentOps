@@ -48,7 +48,7 @@ class RetrievalConfig:
     # Embeddings
     # ---------------------------------------------------------
 
-    # embedding_model: str = "gemini-embedding-001"
+    embedding_model: str = "gemini-embedding-001"
     embedding_model: str = (
     "BAAI/bge-small-en-v1.5"
 )
