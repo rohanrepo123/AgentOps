@@ -1,4 +1,4 @@
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from pathlib import Path
 
 
@@ -42,19 +42,21 @@ class RetrievalConfig:
 
     # Number of candidates retrieved before
     # optional reranking.
-    candidate_k: int = 15
+    candidate_k: list[int] = field(
+    default_factory=lambda: [10, 15, 20, 30]
+)
 
     # ---------------------------------------------------------
     # Embeddings
     # ---------------------------------------------------------
 
-    embedding_model: str = "gemini-embedding-001"
-    embedding_model: str = (
-    "BAAI/bge-small-en-v1.5"
-)
+    # embedding_model: str = "gemini-embedding-001"
 #     embedding_model: str = (
-#     "text-embedding-3-large"
+#     "BAAI/bge-small-en-v1.5"
 # )
+    embedding_model: str = (
+    "text-embedding-3-large"
+)
 #     embedding_model: str = (
 #     "text-embedding-3-small"
 # )

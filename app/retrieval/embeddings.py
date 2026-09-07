@@ -19,18 +19,18 @@ def get_embedding_model() -> OpenAIEmbeddings:
 #     embeddings = GoogleGenerativeAIEmbeddings(
 #     model="gemini-embedding-001"
 # )
-    # model = OpenAIEmbeddings(
-    #     model = retrieval_config.embedding_model,
-    # )
-
-    model = HuggingFaceEmbeddings(
-        model=retrieval_config.embedding_model,
-        model_kwargs={
-            "device": "cpu",
-        },
-        encode_kwargs={
-            "normalize_embeddings": True,
-        },
+    model = OpenAIEmbeddings(
+        model = retrieval_config.embedding_model,
     )
+
+    # model = HuggingFaceEmbeddings(
+    #     model=retrieval_config.embedding_model,
+    #     model_kwargs={
+    #         "device": "cpu",
+    #     },
+    #     encode_kwargs={
+    #         "normalize_embeddings": True,
+    #     },
+    # )
 
     return model
