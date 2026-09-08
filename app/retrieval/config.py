@@ -84,11 +84,16 @@ class RetrievalConfig:
     # ---------------------------------------------------------
 
     use_metadata_filtering: bool = True
-    use_reranker: bool = True
 
     # Diversification experiment
     use_diversification: bool = True
     max_chunks_per_document: int = 1
+    # Reranking
+    
+    use_reranker: bool = False
+    reranker_model: str = "BAAI/bge-reranker-base"
+    reranker_max_length: int = 512
+    reranker_batch_size: int = 16
     
 # Single shared configuration object
 retrieval_config = RetrievalConfig()

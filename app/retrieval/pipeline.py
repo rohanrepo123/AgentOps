@@ -6,7 +6,6 @@ from typing import Optional
 from app.retrieval.retriever import DocumentRetriever
 from app.retrieval.schemas import RetrievalResponse
 
-
 class RetrievalPipeline:
     """
     Public retrieval interface.

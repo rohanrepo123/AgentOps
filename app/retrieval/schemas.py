@@ -4,67 +4,27 @@ from pydantic import BaseModel, Field
 
 
 class RetrievalResult(BaseModel):
-    """
-    Represents one retrieved document chunk.
-    """
+    """Represents one retrieved document chunk."""
 
-    content: str = Field(
-        ...,
-        description="Text content of the retrieved chunk.",
-    )
-
-    score: float = Field(
-        ...,
-        description="Retrieval relevance score.",
-    )
-
-    document_id: str = Field(
-        ...,
-        description="Unique identifier of the source document.",
-    )
-
-    source: str = Field(
-        ...,
-        description="Relative path or source identifier.",
-    )
-
-    category: str = Field(
-        ...,
-        description="Document category such as service, runbook, etc.",
-    )
-
-    document_type: str = Field(
-        ...,
-        description="Type of document.",
-    )
-
-    service: Optional[str] = Field(
+    content: str = Field(..., description="Text content of the retrieved chunk.")
+    score: float = Field(..., description="Original FAISS retrieval score.")
+    reranker_score: Optional[float] = Field(
         default=None,
-        description="Associated AcmeCloud service.",
+        description="Cross-encoder reranker score, when reranking is enabled.",
     )
-
-    chunk_id: Optional[str] = Field(
-        default=None,
-        description="Unique chunk identifier.",
-    )
-
-    metadata: dict = Field(
-        default_factory=dict,
-        description="Additional source metadata.",
-    )
+    document_id: str = Field(..., description="Unique source document identifier.")
+    source: str = Field(..., description="Relative path or source identifier.")
+    category: str = Field(..., description="Document category.")
+    document_type: str = Field(..., description="Document type.")
+    service: Optional[str] = Field(default=None, description="Associated service.")
+    chunk_id: Optional[str] = Field(default=None, description="Unique chunk ID.")
+    metadata: dict = Field(default_factory=dict)
 
 
 class RetrievalResponse(BaseModel):
-    """
-    Complete response returned by the retrieval pipeline.
-    """
+    """Complete response returned by the retrieval pipeline."""
 
     query: str
-
-    results: list[RetrievalResult] = Field(
-        default_factory=list
-    )
-
+    results: list[RetrievalResult] = Field(default_factory=list)
     total_results: int = 0
-
     retrieval_time_ms: float = 0.0
