@@ -16,10 +16,11 @@ Production-oriented agentic AI platform for autonomous incident investigation, L
 - Added a retrieval evaluation framework with Recall@K, Precision@K, Hit Rate@K, MRR, latency, and document-diversity metrics.
 - Integrated LangSmith tracing.
 - Added a local cross-encoder reranking experiment with controlled candidate-pool ablations.
+- Added deterministic multi-query expansion with merged, deduplicated candidate retrieval and controlled ablation benchmarking.
 
 ## Retrieval Benchmark
 
-All results use the AcmeCloud evaluation set and the same FAISS retrieval pipeline. The current dense-retrieval configuration uses metadata filtering and document diversification with `candidate_k=20` and `top_k=5`.
+All results use the AcmeCloud evaluation set and the same FAISS retrieval pipeline. The dense-retrieval configuration uses metadata filtering and document diversification with `candidate_k=20` and `top_k=5`.
 
 ### Candidate-Pool Ablation: Dense Retrieval
 
@@ -40,7 +41,7 @@ The reranking experiment keeps the retrieval pipeline fixed and varies only the 
 
 | Candidate K | Recall@5 | Precision@5 | MRR | Mean Latency | P95 Latency | Diversity@5 |
 |---:|---:|---:|---:|---:|---:|---:|
-| **20** | **62.36%** | **60.00%** | **0.9583** | **1000.23 ms** | **1509.43 ms** | **100%** |
+| **20** | **62.36%** | **60.00%** | **0.9583** | **~1.0 s** | **~1.51 s** | **100%** |
 | 30 | 58.89% | 56.67% | 0.9583 | 1307.63 ms | 1566.33 ms | 100% |
 | 50 | 57.08% | 55.00% | 0.9167 | 1863.07 ms | 2128.28 ms | 100% |
 | 100 | 54.03% | 51.67% | 0.9167 | 3460.32 ms | 4025.06 ms | 100% |
@@ -50,10 +51,30 @@ The reranking experiment keeps the retrieval pipeline fixed and varies only the 
 - `candidate_k=20` is the best operating point among the tested reranking configurations.
 - Increasing the reranker candidate pool from 20 to 30, 50, and 100 progressively reduced Recall@5 from **62.36% to 58.89%, 57.08%, and 54.03%**.
 - Precision@5 also declined as the candidate pool increased, falling from **60.00% at K=20 to 51.67% at K=100**.
-- Mean latency increased from **1.00 s at K=20 to 3.46 s at K=100**.
+- Mean latency increased substantially as the reranker candidate pool increased, reaching roughly **3.46 s at K=100**.
 - Diversity remained **100%** across the tested reranking configurations after correcting the retrieval ordering so that the reranker scores the full candidate pool before final diversification.
 - Increasing reranker candidate depth therefore does not improve aggregate retrieval quality on the current AcmeCloud benchmark and introduces substantial additional inference cost.
 - The current evidence favors keeping the dense retriever as the default retrieval path rather than enabling this cross-encoder reranker by default.
+
+### Multi-Query Expansion Ablation
+
+The multi-query experiment compares the `candidate_k=20` reranking baseline against deterministic multi-query retrieval. The multi-query path keeps the original query, generates up to three targeted variants, retrieves candidates for each query, merges and deduplicates the candidate pool, reranks the merged candidates using the original user query, and applies final document diversification.
+
+| Configuration | Recall@5 | Precision@5 | MRR | Mean Latency | Diversity@5 | Mean Raw Candidates | Mean Unique Chunks | Mean Unique Documents |
+|---|---:|---:|---:|---:|---:|---:|---:|---:|
+| Reranker baseline | 62.36% | 60.00% | 0.9583 | 131.83 ms | 100% | 20.00 | 20.00 | 13.17 |
+| **Multi-query v2** | **64.44%** | **61.67%** | **0.9583** | **134.37 ms** | **100%** | **70.00** | **28.58** | **17.92** |
+
+#### Multi-Query Findings
+
+- Multi-query expansion improved Recall@5 from **62.36% to 64.44%**, a **2.08 percentage-point gain**.
+- Precision@5 improved from **60.00% to 61.67%**, while MRR remained unchanged at **0.9583**.
+- Hit Rate@5 remained **100%** and Diversity@5 remained **100%**.
+- Mean observed retrieval latency increased only from **131.83 ms to 134.37 ms**, an increase of approximately **2.53 ms (1.9%)** in this paired benchmark run.
+- Multi-query retrieval increased the average raw FAISS candidate count from **20 to 70**, while deduplication reduced the average merged candidate pool to **28.58 unique chunks**.
+- The candidate expansion is query-dependent: queries without a matching expansion rule still use the original query only.
+- The strongest observed improvement was on notification-queue investigation, where Recall@5 increased from **75% to 100%**.
+- The result is promising but should be treated as an engineering finding rather than a general production claim because the benchmark is small and synthetic.
 
 ### Current Findings
 
@@ -63,6 +84,7 @@ The reranking experiment keeps the retrieval pipeline fixed and varies only the 
 - OpenAI `text-embedding-3-large` reached **60.28% Recall@5** at `candidate_k=30`, but its retrieval latency remained substantially higher than the Hugging Face configuration.
 - The current dense-retrieval operating point is **Hugging Face embeddings with `candidate_k=20` and `top_k=5`**, balancing retrieval quality, precision, and latency.
 - The reranking ablation shows that increasing cross-encoder candidate depth beyond 20 worsens both retrieval quality and latency on the current benchmark.
+- Multi-query expansion provides a modest retrieval-quality improvement over the reranking baseline while preserving MRR, Hit Rate@5, and document diversity, with only a small observed latency increase in the current paired run.
 
 ### Retrieval Progression
 
@@ -72,24 +94,26 @@ The reranking experiment keeps the retrieval pipeline fixed and varies only the 
 | Diversification | HF + diversification, `candidate_k=15` | 57.50% | 90.00% | 0.9167 |
 | Candidate-pool tuning | HF + metadata normalization + diversification, `candidate_k=20` | **61.67%** | **98.33%** | **1.0000** |
 | Reranking ablation | HF + cross-encoder, `candidate_k=20` | 62.36% | 60.00% | 0.9583 |
+| Multi-query expansion | HF + multi-query retrieval + cross-encoder, `candidate_k=20` | **64.44%** | **61.67%** | **0.9583** |
 
-> Note: metadata normalization was corrected before the latest dense-retrieval benchmark. The reranking ablation is a separate experiment and should not be interpreted as a direct production improvement over the dense-retrieval result because the experiments are tracked as separate configurations.
+> Note: metadata normalization was corrected before the latest dense-retrieval benchmark. The reranking and multi-query experiments are separate configurations and should not be interpreted as a single monotonic production-improvement sequence because they optimize different retrieval strategies.
 
-The candidate-pool study is treated as an engineering trade-off analysis rather than a universal embedding-model ranking because the benchmark uses a small synthetic AcmeCloud evaluation set.
+The candidate-pool and multi-query studies are treated as engineering trade-off analyses rather than universal model rankings because the benchmark uses a small synthetic AcmeCloud evaluation set.
 
 ## Known Benchmark Limitations
 
 - The earlier `RET-012` metadata-filtering failure was caused by inconsistent service metadata and has now been addressed through metadata normalization and related-service filtering.
-- Reranking experiments currently use a synthetic AcmeCloud benchmark, so model rankings may not generalize to production incident corpora.
-- Cross-encoder reranking currently adds substantial inference latency and does not improve aggregate retrieval quality on the tested benchmark.
+- Reranking and multi-query experiments currently use a synthetic AcmeCloud benchmark, so retrieval behavior may not generalize to production incident corpora.
+- Cross-encoder reranking adds substantially more inference cost than dense retrieval and should therefore be enabled only when its quality benefits justify the latency overhead.
+- Multi-query expansion increases retrieval work and merged candidate-pool size, so the current implementation requires further candidate-budget and latency optimization before being treated as a universal production default.
 
 ## Planned Next Steps
 
-- Query expansion
 - Hybrid retrieval
 - Context compression
 - Retrieval regression testing
-- Reranker model and latency optimization
+- Multi-query candidate-budget and latency optimization
+- Reranker model optimization or alternative lightweight reranking strategies
 - Agentic incident investigation workflow
 - LLM evaluation and observability
 - Token and cost optimization
