@@ -1064,3 +1064,128 @@
   ]
 }
 ================================================================================
+{
+  "experiment": "diversified_retrieval",
+  "timestamp_utc": "2026-09-08T18:34:08.912825+00:00",
+  "embedding_model": "BAAI/bge-small-en-v1.5",
+  "vector_store": "FAISS",
+  "configuration": {
+    "chunk_size": 500,
+    "chunk_overlap": 75,
+    "candidate_k": 20,
+    "top_k": 5,
+    "metadata_filtering": true,
+    "reranking": true,
+    "diversification": true,
+    "max_chunks_per_document": 1
+  },
+  "evaluation_queries": 12,
+  "metrics": {
+    "recall_at_1": 0.225,
+    "recall_at_3": 0.5194444444444445,
+    "recall_at_5": 0.6027777777777777,
+    "precision_at_1": 1.0,
+    "precision_at_3": 0.9722222222222222,
+    "precision_at_5": 0.9833333333333334,
+    "hit_rate_at_1": 1.0,
+    "hit_rate_at_3": 1.0,
+    "hit_rate_at_5": 1.0,
+    "mrr": 1.0,
+    "mean_retrieval_latency_ms": 142.0991666666667,
+    "p95_retrieval_latency_ms": 532.4526999999994,
+    "diversity_at_1": 1.0,
+    "diversity_at_3": 0.9166666666666666,
+    "diversity_at_5": 0.7166666666666667
+  },
+  "notes": [
+    "Document diversification enabled.",
+    "Maximum one chunk per document in the first selection pass.",
+    "No reranker.",
+    "No query expansion."
+  ]
+}
+================================================================================
+{
+  "experiment": "diversified_retrieval",
+  "timestamp_utc": "2026-09-08T18:38:36.009176+00:00",
+  "embedding_model": "BAAI/bge-small-en-v1.5",
+  "vector_store": "FAISS",
+  "configuration": {
+    "chunk_size": 500,
+    "chunk_overlap": 75,
+    "candidate_k": 20,
+    "top_k": 5,
+    "metadata_filtering": true,
+    "reranking": true,
+    "diversification": true,
+    "max_chunks_per_document": 1
+  },
+  "evaluation_queries": 12,
+  "metrics": {
+    "recall_at_1": 0.225,
+    "recall_at_3": 0.5194444444444445,
+    "recall_at_5": 0.6027777777777777,
+    "precision_at_1": 1.0,
+    "precision_at_3": 0.9722222222222222,
+    "precision_at_5": 0.9833333333333334,
+    "hit_rate_at_1": 1.0,
+    "hit_rate_at_3": 1.0,
+    "hit_rate_at_5": 1.0,
+    "mrr": 1.0,
+    "mean_retrieval_latency_ms": 110.095,
+    "p95_retrieval_latency_ms": 418.54214999999954,
+    "diversity_at_1": 1.0,
+    "diversity_at_3": 0.9166666666666666,
+    "diversity_at_5": 0.7166666666666667
+  },
+  "notes": [
+    "Document diversification enabled.",
+    "Maximum one chunk per document in the first selection pass.",
+    "No reranker.",
+    "No query expansion."
+  ]
+}
+================================================================================
+{
+  "experiment": "diversified_retrieval",
+  "timestamp_utc": "2026-09-08T18:55:50.956527+00:00",
+  "embedding_model": "BAAI/bge-small-en-v1.5",
+  "vector_store": "FAISS",
+  "configuration": {
+    "chunk_size": 500,
+    "chunk_overlap": 75,
+    "candidate_k": 20,
+    "top_k": 5,
+    "metadata_filtering": true,
+    "reranking": true,
+    "Query_Expansion": true,
+    "diversification": true,
+    "max_chunks_per_document": 1
+  },
+  "evaluation_queries": 12,
+  "metrics": {
+    "recall_at_1": 0.225,
+    "recall_at_3": 0.5194444444444445,
+    "recall_at_5": 0.6027777777777777,
+    "precision_at_1": 1.0,
+    "precision_at_3": 0.9722222222222222,
+    "precision_at_5": 0.9833333333333334,
+    "hit_rate_at_1": 1.0,
+    "hit_rate_at_3": 1.0,
+    "hit_rate_at_5": 1.0,
+    "mrr": 1.0,
+    "mean_retrieval_latency_ms": 101.82191666666667,
+    "p95_retrieval_latency_ms": 368.4629499999995,
+    "diversity_at_1": 1.0,
+    "diversity_at_3": 0.9166666666666666,
+    "diversity_at_5": 0.7166666666666667
+  },
+  "notes": [
+    "Simple Deterministic Query Expansion Enabled",
+    "Document diversification enabled.",
+    "Maximum one chunk per document in the first selection pass.",
+    "No reranker.",
+    "No query expansion."
+  ]
+}
+================================================================================

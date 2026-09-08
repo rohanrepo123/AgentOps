@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 from typing import Sequence
-
+import torch 
 from sentence_transformers import CrossEncoder
 
 from app.retrieval.config import retrieval_config
@@ -10,11 +10,22 @@ from app.retrieval.schemas import RetrievalResult
 class DocumentReranker:
     """Rerank retrieval candidates with a local cross-encoder."""
 
-    def __init__(self, model_name: str | None = None) -> None:
+    def __init__(self, model_name: str | None = None,device: str = None) -> None:
         self.model_name = model_name or retrieval_config.reranker_model
+        if device is None:
+            if torch.cuda.is_available():
+                self.device = "cuda"
+            elif hasattr(torch.backends, "mps") and torch.backends.mps.is_available():
+                self.device = "mps"
+            else:
+                self.device = "cpu"
+        else:
+            self.device = device
+        print(self.device)
         self.model = CrossEncoder(
             self.model_name,
             max_length=retrieval_config.reranker_max_length,
+            device=self.device
         )
 
     def rerank(

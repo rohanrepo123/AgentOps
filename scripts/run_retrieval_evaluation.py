@@ -258,7 +258,10 @@ def main() -> None:
         )
 
         print(
-            f"Query: {case.query}"
+            f"Original Query: {case.query}"
+        )
+        print(
+            f"New Query: {case.query}"
         )
 
         print(
@@ -313,7 +316,7 @@ def main() -> None:
 
     print("\n")
     print("=" * 80)
-    print("DIVERSIFIED RESULTS")
+    print("Query Expansioned RESULTS")
     print("=" * 80)
 
     for k in K_VALUES:
@@ -368,6 +371,7 @@ def main() -> None:
             "top_k": retrieval_config.top_k,
             "metadata_filtering": retrieval_config.use_metadata_filtering,
             "reranking": retrieval_config.use_reranker,
+            "Query_Expansion":retrieval_config.use_query_expansion,
             "diversification": retrieval_config.use_diversification,
             "max_chunks_per_document": retrieval_config.max_chunks_per_document,
         },
@@ -390,6 +394,7 @@ def main() -> None:
             "diversity_at_5": statistics.mean(diversity_scores[5]),
         },
         "notes": [
+            "Simple Deterministic Query Expansion Enabled",
             "Document diversification enabled.",
             "Maximum one chunk per document in the first selection pass.",
             "No reranker.",

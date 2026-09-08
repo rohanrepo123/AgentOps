@@ -51,7 +51,7 @@ class RetrievalPipeline:
         response.retrieval_time_ms = (
             round(elapsed_ms, 3)
         )
-
+        # x = 
         return response
 
 # x= RetrievalPipeline()

@@ -90,10 +90,13 @@ class RetrievalConfig:
     max_chunks_per_document: int = 1
     # Reranking
     
-    use_reranker: bool = False
+    use_reranker: bool = True
     reranker_model: str = "BAAI/bge-reranker-base"
     reranker_max_length: int = 512
     reranker_batch_size: int = 16
-    
+
+    #query_Expansion
+    use_query_expansion: bool = True    
+
 # Single shared configuration object
 retrieval_config = RetrievalConfig()

@@ -2,7 +2,7 @@
 from __future__ import annotations
 
 from typing import Optional
-
+from app.retrieval.query_expander import SimpleQueryExpander
 from langchain_community.vectorstores import FAISS
 
 from app.retrieval.config import retrieval_config
@@ -19,11 +19,22 @@ class DocumentRetriever:
         self,
         vector_store: Optional[FAISS] = None,
         use_reranker: Optional[bool] = None,
+        #Added
+        use_query_expansion: Optional[bool] = None,
     ) -> None:
         self.diversifier = DocumentDiversifier(
             max_chunks_per_document=retrieval_config.max_chunks_per_document
         )
-
+        self.use_query_expansion = (
+        retrieval_config.use_query_expansion
+        if use_query_expansion is None
+        else use_query_expansion
+        )
+        self.query_expander = (
+            SimpleQueryExpander()
+            if self.use_query_expansion
+            else None
+        )
         self.use_reranker = (
             retrieval_config.use_reranker
             if use_reranker is None
@@ -57,10 +68,18 @@ class DocumentRetriever:
         if top_k <= 0:
             raise ValueError("top_k must be greater than 0.")
 
+        original_query = query
+
+        if self.query_expander is not None:
+            retrieval_query = self.query_expander.expand(query)
+        else:
+            retrieval_query = query
+
+
         search_k = max(top_k, retrieval_config.candidate_k)
 
         raw_results = self.vector_store.similarity_search_with_score(
-            query,
+            retrieval_query,
             k=search_k,
         )
 
@@ -101,7 +120,7 @@ class DocumentRetriever:
         # Apply reranker to the full candidate pool.
         if self.reranker is not None:
             ranked_candidates = self.reranker.rerank(
-                query=query,
+                query=original_query,
                 candidates=candidates,
                 top_k=None,
             )
@@ -119,7 +138,8 @@ class DocumentRetriever:
             results = ranked_candidates[:top_k]
 
         return RetrievalResponse(
-            query=query,
+            query=original_query,
+            new_query=retrieval_query,
             results=results,
-            total_results=len(results),
+            total_results=len(results[:top_k]),
         )
