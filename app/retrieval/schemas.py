@@ -25,6 +25,12 @@ class RetrievalResponse(BaseModel):
     """Complete response returned by the retrieval pipeline."""
 
     query: str
-    results: list[RetrievalResult] = Field(default_factory=list)
+    retrieval_queries: list[str] = Field(
+        default_factory=list,
+        description="Queries used for candidate retrieval.",
+    )
+    results: list[RetrievalResult] = Field(
+        default_factory=list
+    )
     total_results: int = 0
     retrieval_time_ms: float = 0.0

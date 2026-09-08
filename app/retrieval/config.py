@@ -96,7 +96,7 @@ class RetrievalConfig:
     reranker_batch_size: int = 16
 
     #query_Expansion
-    use_query_expansion: bool = True    
+    use_query_expansion: bool = False    
 
 # Single shared configuration object
 retrieval_config = RetrievalConfig()

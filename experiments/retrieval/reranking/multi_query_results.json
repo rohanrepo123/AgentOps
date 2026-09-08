@@ -1,0 +1,670 @@
+{
+  "baseline": {
+    "use_multi_query_expansion": false,
+    "candidate_k": 20,
+    "top_k": 5,
+    "mean_retrieval_latency_ms": 117.53833333333334,
+    "recall_at_1": 0.20416666666666666,
+    "recall_at_3": 0.45694444444444443,
+    "recall_at_5": 0.6236111111111111,
+    "precision_at_1": 0.9166666666666666,
+    "precision_at_3": 0.7222222222222222,
+    "precision_at_5": 0.6,
+    "hit_rate_at_1": 0.9166666666666666,
+    "hit_rate_at_3": 1.0,
+    "hit_rate_at_5": 1.0,
+    "mrr": 0.9583333333333334,
+    "diversity_at_5": 1.0,
+    "per_query": [
+      {
+        "query": "Why could customers be charged twice after a payment timeout?",
+        "retrieval_queries": [
+          "Why could customers be charged twice after a payment timeout?"
+        ],
+        "recall_at_1": 0.16666666666666666,
+        "recall_at_3": 0.5,
+        "recall_at_5": 0.8333333333333334,
+        "precision_at_1": 1.0,
+        "precision_at_3": 1.0,
+        "precision_at_5": 1.0,
+        "hit_rate_at_1": 1.0,
+        "hit_rate_at_3": 1.0,
+        "hit_rate_at_5": 1.0,
+        "mrr": 1.0,
+        "diversity_at_5": 1.0,
+        "retrieval_time_ms": 315.814,
+        "documents": [
+          "incident-inc-001",
+          "incident-inc-017",
+          "svc-payment",
+          "ts-duplicate-payment",
+          "rb-payment-timeout"
+        ]
+      },
+      {
+        "query": "How should a payment timeout be investigated?",
+        "retrieval_queries": [
+          "How should a payment timeout be investigated?"
+        ],
+        "recall_at_1": 0.16666666666666666,
+        "recall_at_3": 0.5,
+        "recall_at_5": 0.6666666666666666,
+        "precision_at_1": 1.0,
+        "precision_at_3": 1.0,
+        "precision_at_5": 0.8,
+        "hit_rate_at_1": 1.0,
+        "hit_rate_at_3": 1.0,
+        "hit_rate_at_5": 1.0,
+        "mrr": 1.0,
+        "diversity_at_5": 1.0,
+        "retrieval_time_ms": 141.19,
+        "documents": [
+          "rb-payment-timeout",
+          "svc-payment",
+          "ts-duplicate-payment",
+          "incident-inc-001",
+          "arch-service-architecture"
+        ]
+      },
+      {
+        "query": "Why do authentication failures happen after key rotation?",
+        "retrieval_queries": [
+          "Why do authentication failures happen after key rotation?"
+        ],
+        "recall_at_1": 0.16666666666666666,
+        "recall_at_3": 0.5,
+        "recall_at_5": 0.8333333333333334,
+        "precision_at_1": 1.0,
+        "precision_at_3": 1.0,
+        "precision_at_5": 1.0,
+        "hit_rate_at_1": 1.0,
+        "hit_rate_at_3": 1.0,
+        "hit_rate_at_5": 1.0,
+        "mrr": 1.0,
+        "diversity_at_5": 1.0,
+        "retrieval_time_ms": 90.173,
+        "documents": [
+          "svc-auth",
+          "ts-login-failure",
+          "api-auth",
+          "incident-inc-003",
+          "rb-auth-failure"
+        ]
+      },
+      {
+        "query": "How should API latency incidents be investigated?",
+        "retrieval_queries": [
+          "How should API latency incidents be investigated?"
+        ],
+        "recall_at_1": 0.0,
+        "recall_at_3": 0.25,
+        "recall_at_5": 0.5,
+        "precision_at_1": 0.0,
+        "precision_at_3": 0.3333333333333333,
+        "precision_at_5": 0.4,
+        "hit_rate_at_1": 0.0,
+        "hit_rate_at_3": 1.0,
+        "hit_rate_at_5": 1.0,
+        "mrr": 0.5,
+        "diversity_at_5": 1.0,
+        "retrieval_time_ms": 106.133,
+        "documents": [
+          "rb-notification-backlog",
+          "rb-api-latency",
+          "rb-webhook-failure",
+          "arch-dependency-graph",
+          "svc-api"
+        ]
+      },
+      {
+        "query": "What causes elevated API latency when a downstream service becomes slow?",
+        "retrieval_queries": [
+          "What causes elevated API latency when a downstream service becomes slow?"
+        ],
+        "recall_at_1": 0.16666666666666666,
+        "recall_at_3": 0.5,
+        "recall_at_5": 0.6666666666666666,
+        "precision_at_1": 1.0,
+        "precision_at_3": 1.0,
+        "precision_at_5": 0.8,
+        "hit_rate_at_1": 1.0,
+        "hit_rate_at_3": 1.0,
+        "hit_rate_at_5": 1.0,
+        "mrr": 1.0,
+        "diversity_at_5": 1.0,
+        "retrieval_time_ms": 114.108,
+        "documents": [
+          "arch-service-architecture",
+          "svc-api",
+          "incident-inc-002",
+          "ts-slow-api",
+          "incident-inc-011"
+        ]
+      },
+      {
+        "query": "What should be checked when notification queues become saturated?",
+        "retrieval_queries": [
+          "What should be checked when notification queues become saturated?"
+        ],
+        "recall_at_1": 0.25,
+        "recall_at_3": 0.75,
+        "recall_at_5": 0.75,
+        "precision_at_1": 1.0,
+        "precision_at_3": 1.0,
+        "precision_at_5": 0.6,
+        "hit_rate_at_1": 1.0,
+        "hit_rate_at_3": 1.0,
+        "hit_rate_at_5": 1.0,
+        "mrr": 1.0,
+        "diversity_at_5": 1.0,
+        "retrieval_time_ms": 82.641,
+        "documents": [
+          "incident-inc-004",
+          "rb-notification-backlog",
+          "svc-notification",
+          "rb-webhook-failure",
+          "arch-service-architecture"
+        ]
+      },
+      {
+        "query": "Why are invoice and password-reset emails delayed?",
+        "retrieval_queries": [
+          "Why are invoice and password-reset emails delayed?"
+        ],
+        "recall_at_1": 0.25,
+        "recall_at_3": 0.25,
+        "recall_at_5": 0.25,
+        "precision_at_1": 1.0,
+        "precision_at_3": 0.3333333333333333,
+        "precision_at_5": 0.2,
+        "hit_rate_at_1": 1.0,
+        "hit_rate_at_3": 1.0,
+        "hit_rate_at_5": 1.0,
+        "mrr": 1.0,
+        "diversity_at_5": 1.0,
+        "retrieval_time_ms": 76.468,
+        "documents": [
+          "incident-inc-004",
+          "incident-inc-022",
+          "incident-inc-009",
+          "incident-inc-008",
+          "svc-subscription"
+        ]
+      },
+      {
+        "query": "Why can subscription upgrades remain pending?",
+        "retrieval_queries": [
+          "Why can subscription upgrades remain pending?"
+        ],
+        "recall_at_1": 0.2,
+        "recall_at_3": 0.4,
+        "recall_at_5": 0.4,
+        "precision_at_1": 1.0,
+        "precision_at_3": 0.6666666666666666,
+        "precision_at_5": 0.4,
+        "hit_rate_at_1": 1.0,
+        "hit_rate_at_3": 1.0,
+        "hit_rate_at_5": 1.0,
+        "mrr": 1.0,
+        "diversity_at_5": 1.0,
+        "retrieval_time_ms": 100.09,
+        "documents": [
+          "svc-subscription",
+          "incident-inc-005",
+          "arch-dependency-graph",
+          "incident-inc-002",
+          "incident-inc-011"
+        ]
+      },
+      {
+        "query": "How should webhook delivery failures be investigated?",
+        "retrieval_queries": [
+          "How should webhook delivery failures be investigated?"
+        ],
+        "recall_at_1": 0.16666666666666666,
+        "recall_at_3": 0.3333333333333333,
+        "recall_at_5": 0.5,
+        "precision_at_1": 1.0,
+        "precision_at_3": 0.6666666666666666,
+        "precision_at_5": 0.6,
+        "hit_rate_at_1": 1.0,
+        "hit_rate_at_3": 1.0,
+        "hit_rate_at_5": 1.0,
+        "mrr": 1.0,
+        "diversity_at_5": 1.0,
+        "retrieval_time_ms": 102.834,
+        "documents": [
+          "ts-webhook-failure",
+          "arch-dependency-graph",
+          "incident-inc-018",
+          "incident-inc-025",
+          "incident-inc-005"
+        ]
+      },
+      {
+        "query": "What causes stale search results?",
+        "retrieval_queries": [
+          "What causes stale search results?"
+        ],
+        "recall_at_1": 0.25,
+        "recall_at_3": 0.5,
+        "recall_at_5": 0.75,
+        "precision_at_1": 1.0,
+        "precision_at_3": 0.6666666666666666,
+        "precision_at_5": 0.6,
+        "hit_rate_at_1": 1.0,
+        "hit_rate_at_3": 1.0,
+        "hit_rate_at_5": 1.0,
+        "mrr": 1.0,
+        "diversity_at_5": 1.0,
+        "retrieval_time_ms": 80.786,
+        "documents": [
+          "svc-search",
+          "svc-auth",
+          "incident-inc-006",
+          "incident-inc-003",
+          "incident-inc-019"
+        ]
+      },
+      {
+        "query": "How should object storage upload failures be investigated?",
+        "retrieval_queries": [
+          "How should object storage upload failures be investigated?"
+        ],
+        "recall_at_1": 0.3333333333333333,
+        "recall_at_3": 0.6666666666666666,
+        "recall_at_5": 1.0,
+        "precision_at_1": 1.0,
+        "precision_at_3": 0.6666666666666666,
+        "precision_at_5": 0.6,
+        "hit_rate_at_1": 1.0,
+        "hit_rate_at_3": 1.0,
+        "hit_rate_at_5": 1.0,
+        "mrr": 1.0,
+        "diversity_at_5": 1.0,
+        "retrieval_time_ms": 85.273,
+        "documents": [
+          "incident-inc-007",
+          "ts-storage-failures",
+          "svc-webhook",
+          "svc-invoice",
+          "incident-inc-020"
+        ]
+      },
+      {
+        "query": "What should we investigate when valid users receive unexpected 429 responses?",
+        "retrieval_queries": [
+          "What should we investigate when valid users receive unexpected 429 responses?"
+        ],
+        "recall_at_1": 0.3333333333333333,
+        "recall_at_3": 0.3333333333333333,
+        "recall_at_5": 0.3333333333333333,
+        "precision_at_1": 1.0,
+        "precision_at_3": 0.3333333333333333,
+        "precision_at_5": 0.2,
+        "hit_rate_at_1": 1.0,
+        "hit_rate_at_3": 1.0,
+        "hit_rate_at_5": 1.0,
+        "mrr": 1.0,
+        "diversity_at_5": 1.0,
+        "retrieval_time_ms": 114.95,
+        "documents": [
+          "incident-inc-010",
+          "arch-dependency-graph",
+          "rb-webhook-failure",
+          "api-payment",
+          "incident-inc-003"
+        ]
+      }
+    ]
+  },
+  "multi_query": {
+    "use_multi_query_expansion": true,
+    "candidate_k": 20,
+    "top_k": 5,
+    "mean_retrieval_latency_ms": 126.24258333333333,
+    "recall_at_1": 0.20416666666666666,
+    "recall_at_3": 0.45694444444444443,
+    "recall_at_5": 0.6583333333333333,
+    "precision_at_1": 0.9166666666666666,
+    "precision_at_3": 0.7222222222222222,
+    "precision_at_5": 0.6333333333333333,
+    "hit_rate_at_1": 0.9166666666666666,
+    "hit_rate_at_3": 1.0,
+    "hit_rate_at_5": 1.0,
+    "mrr": 0.9583333333333334,
+    "diversity_at_5": 1.0,
+    "per_query": [
+      {
+        "query": "Why could customers be charged twice after a payment timeout?",
+        "retrieval_queries": [
+          "Why could customers be charged twice after a payment timeout?",
+          "Why could customers be charged twice after a payment timeout? duplicate payment transaction",
+          "Why could customers be charged twice after a payment timeout? payment retry idempotency",
+          "Why could customers be charged twice after a payment timeout? duplicate charge payment attempt"
+        ],
+        "recall_at_1": 0.16666666666666666,
+        "recall_at_3": 0.5,
+        "recall_at_5": 0.8333333333333334,
+        "precision_at_1": 1.0,
+        "precision_at_3": 1.0,
+        "precision_at_5": 1.0,
+        "hit_rate_at_1": 1.0,
+        "hit_rate_at_3": 1.0,
+        "hit_rate_at_5": 1.0,
+        "mrr": 1.0,
+        "diversity_at_5": 1.0,
+        "retrieval_time_ms": 155.294,
+        "documents": [
+          "incident-inc-001",
+          "incident-inc-017",
+          "svc-payment",
+          "ts-duplicate-payment",
+          "rb-payment-timeout"
+        ]
+      },
+      {
+        "query": "How should a payment timeout be investigated?",
+        "retrieval_queries": [
+          "How should a payment timeout be investigated?",
+          "How should a payment timeout be investigated? payment retry timeout",
+          "How should a payment timeout be investigated? payment attempt idempotency",
+          "How should a payment timeout be investigated? duplicate transaction timeout"
+        ],
+        "recall_at_1": 0.16666666666666666,
+        "recall_at_3": 0.5,
+        "recall_at_5": 0.6666666666666666,
+        "precision_at_1": 1.0,
+        "precision_at_3": 1.0,
+        "precision_at_5": 0.8,
+        "hit_rate_at_1": 1.0,
+        "hit_rate_at_3": 1.0,
+        "hit_rate_at_5": 1.0,
+        "mrr": 1.0,
+        "diversity_at_5": 1.0,
+        "retrieval_time_ms": 147.813,
+        "documents": [
+          "rb-payment-timeout",
+          "svc-payment",
+          "ts-duplicate-payment",
+          "arch-data-flow",
+          "incident-inc-001"
+        ]
+      },
+      {
+        "query": "Why do authentication failures happen after key rotation?",
+        "retrieval_queries": [
+          "Why do authentication failures happen after key rotation?",
+          "Why do authentication failures happen after key rotation? authentication login credentials failure",
+          "Why do authentication failures happen after key rotation? API key token invalid",
+          "Why do authentication failures happen after key rotation? authentication configuration key rotation"
+        ],
+        "recall_at_1": 0.16666666666666666,
+        "recall_at_3": 0.5,
+        "recall_at_5": 0.8333333333333334,
+        "precision_at_1": 1.0,
+        "precision_at_3": 1.0,
+        "precision_at_5": 1.0,
+        "hit_rate_at_1": 1.0,
+        "hit_rate_at_3": 1.0,
+        "hit_rate_at_5": 1.0,
+        "mrr": 1.0,
+        "diversity_at_5": 1.0,
+        "retrieval_time_ms": 161.782,
+        "documents": [
+          "svc-auth",
+          "ts-login-failure",
+          "api-auth",
+          "incident-inc-003",
+          "rb-auth-failure"
+        ]
+      },
+      {
+        "query": "How should API latency incidents be investigated?",
+        "retrieval_queries": [
+          "How should API latency incidents be investigated?"
+        ],
+        "recall_at_1": 0.0,
+        "recall_at_3": 0.25,
+        "recall_at_5": 0.5,
+        "precision_at_1": 0.0,
+        "precision_at_3": 0.3333333333333333,
+        "precision_at_5": 0.4,
+        "hit_rate_at_1": 0.0,
+        "hit_rate_at_3": 1.0,
+        "hit_rate_at_5": 1.0,
+        "mrr": 0.5,
+        "diversity_at_5": 1.0,
+        "retrieval_time_ms": 98.783,
+        "documents": [
+          "rb-notification-backlog",
+          "rb-api-latency",
+          "rb-webhook-failure",
+          "arch-dependency-graph",
+          "svc-api"
+        ]
+      },
+      {
+        "query": "What causes elevated API latency when a downstream service becomes slow?",
+        "retrieval_queries": [
+          "What causes elevated API latency when a downstream service becomes slow?"
+        ],
+        "recall_at_1": 0.16666666666666666,
+        "recall_at_3": 0.5,
+        "recall_at_5": 0.6666666666666666,
+        "precision_at_1": 1.0,
+        "precision_at_3": 1.0,
+        "precision_at_5": 0.8,
+        "hit_rate_at_1": 1.0,
+        "hit_rate_at_3": 1.0,
+        "hit_rate_at_5": 1.0,
+        "mrr": 1.0,
+        "diversity_at_5": 1.0,
+        "retrieval_time_ms": 104.62,
+        "documents": [
+          "arch-service-architecture",
+          "svc-api",
+          "incident-inc-002",
+          "ts-slow-api",
+          "incident-inc-011"
+        ]
+      },
+      {
+        "query": "What should be checked when notification queues become saturated?",
+        "retrieval_queries": [
+          "What should be checked when notification queues become saturated?",
+          "What should be checked when notification queues become saturated? notification queue backlog",
+          "What should be checked when notification queues become saturated? message consumer processing delay",
+          "What should be checked when notification queues become saturated? queue saturation worker processing"
+        ],
+        "recall_at_1": 0.25,
+        "recall_at_3": 0.75,
+        "recall_at_5": 1.0,
+        "precision_at_1": 1.0,
+        "precision_at_3": 1.0,
+        "precision_at_5": 0.8,
+        "hit_rate_at_1": 1.0,
+        "hit_rate_at_3": 1.0,
+        "hit_rate_at_5": 1.0,
+        "mrr": 1.0,
+        "diversity_at_5": 1.0,
+        "retrieval_time_ms": 123.847,
+        "documents": [
+          "svc-worker",
+          "incident-inc-004",
+          "rb-notification-backlog",
+          "svc-notification",
+          "rb-webhook-failure"
+        ]
+      },
+      {
+        "query": "Why are invoice and password-reset emails delayed?",
+        "retrieval_queries": [
+          "Why are invoice and password-reset emails delayed?",
+          "Why are invoice and password-reset emails delayed? email delivery notification queue",
+          "Why are invoice and password-reset emails delayed? email worker consumer backlog",
+          "Why are invoice and password-reset emails delayed? notification processing delay"
+        ],
+        "recall_at_1": 0.25,
+        "recall_at_3": 0.25,
+        "recall_at_5": 0.25,
+        "precision_at_1": 1.0,
+        "precision_at_3": 0.3333333333333333,
+        "precision_at_5": 0.2,
+        "hit_rate_at_1": 1.0,
+        "hit_rate_at_3": 1.0,
+        "hit_rate_at_5": 1.0,
+        "mrr": 1.0,
+        "diversity_at_5": 1.0,
+        "retrieval_time_ms": 97.966,
+        "documents": [
+          "incident-inc-004",
+          "incident-inc-022",
+          "incident-inc-008",
+          "incident-inc-020",
+          "api-webhook"
+        ]
+      },
+      {
+        "query": "Why can subscription upgrades remain pending?",
+        "retrieval_queries": [
+          "Why can subscription upgrades remain pending?",
+          "Why can subscription upgrades remain pending? subscription upgrade payment processing",
+          "Why can subscription upgrades remain pending? subscription state transition",
+          "Why can subscription upgrades remain pending? upgrade dependency payment state"
+        ],
+        "recall_at_1": 0.2,
+        "recall_at_3": 0.4,
+        "recall_at_5": 0.4,
+        "precision_at_1": 1.0,
+        "precision_at_3": 0.6666666666666666,
+        "precision_at_5": 0.4,
+        "hit_rate_at_1": 1.0,
+        "hit_rate_at_3": 1.0,
+        "hit_rate_at_5": 1.0,
+        "mrr": 1.0,
+        "diversity_at_5": 1.0,
+        "retrieval_time_ms": 129.591,
+        "documents": [
+          "svc-subscription",
+          "incident-inc-005",
+          "arch-dependency-graph",
+          "incident-inc-002",
+          "incident-inc-011"
+        ]
+      },
+      {
+        "query": "How should webhook delivery failures be investigated?",
+        "retrieval_queries": [
+          "How should webhook delivery failures be investigated?",
+          "How should webhook delivery failures be investigated? webhook retry timeout downstream endpoint",
+          "How should webhook delivery failures be investigated? webhook delivery failure response",
+          "How should webhook delivery failures be investigated? webhook endpoint availability retry"
+        ],
+        "recall_at_1": 0.16666666666666666,
+        "recall_at_3": 0.3333333333333333,
+        "recall_at_5": 0.6666666666666666,
+        "precision_at_1": 1.0,
+        "precision_at_3": 0.6666666666666666,
+        "precision_at_5": 0.8,
+        "hit_rate_at_1": 1.0,
+        "hit_rate_at_3": 1.0,
+        "hit_rate_at_5": 1.0,
+        "mrr": 1.0,
+        "diversity_at_5": 1.0,
+        "retrieval_time_ms": 131.251,
+        "documents": [
+          "ts-webhook-failure",
+          "incident-inc-018",
+          "incident-inc-025",
+          "incident-inc-005",
+          "rb-webhook-failure"
+        ]
+      },
+      {
+        "query": "What causes stale search results?",
+        "retrieval_queries": [
+          "What causes stale search results?",
+          "What causes stale search results? search index stale results",
+          "What causes stale search results? indexing refresh synchronization",
+          "What causes stale search results? search cache index consistency"
+        ],
+        "recall_at_1": 0.25,
+        "recall_at_3": 0.5,
+        "recall_at_5": 0.75,
+        "precision_at_1": 1.0,
+        "precision_at_3": 0.6666666666666666,
+        "precision_at_5": 0.6,
+        "hit_rate_at_1": 1.0,
+        "hit_rate_at_3": 1.0,
+        "hit_rate_at_5": 1.0,
+        "mrr": 1.0,
+        "diversity_at_5": 1.0,
+        "retrieval_time_ms": 112.477,
+        "documents": [
+          "svc-search",
+          "svc-auth",
+          "incident-inc-006",
+          "incident-inc-019",
+          "incident-inc-003"
+        ]
+      },
+      {
+        "query": "How should object storage upload failures be investigated?",
+        "retrieval_queries": [
+          "How should object storage upload failures be investigated?",
+          "How should object storage upload failures be investigated? object storage upload timeout",
+          "How should object storage upload failures be investigated? storage upload retry permission",
+          "How should object storage upload failures be investigated? object storage failure connectivity"
+        ],
+        "recall_at_1": 0.3333333333333333,
+        "recall_at_3": 0.6666666666666666,
+        "recall_at_5": 1.0,
+        "precision_at_1": 1.0,
+        "precision_at_3": 0.6666666666666666,
+        "precision_at_5": 0.6,
+        "hit_rate_at_1": 1.0,
+        "hit_rate_at_3": 1.0,
+        "hit_rate_at_5": 1.0,
+        "mrr": 1.0,
+        "diversity_at_5": 1.0,
+        "retrieval_time_ms": 125.294,
+        "documents": [
+          "incident-inc-007",
+          "ts-storage-failures",
+          "svc-invoice",
+          "incident-inc-020",
+          "rb-notification-backlog"
+        ]
+      },
+      {
+        "query": "What should we investigate when valid users receive unexpected 429 responses?",
+        "retrieval_queries": [
+          "What should we investigate when valid users receive unexpected 429 responses?",
+          "What should we investigate when valid users receive unexpected 429 responses? HTTP 429 rate limiting",
+          "What should we investigate when valid users receive unexpected 429 responses? API throttling request limit",
+          "What should we investigate when valid users receive unexpected 429 responses? rate limiter request rejection"
+        ],
+        "recall_at_1": 0.3333333333333333,
+        "recall_at_3": 0.3333333333333333,
+        "recall_at_5": 0.3333333333333333,
+        "precision_at_1": 1.0,
+        "precision_at_3": 0.3333333333333333,
+        "precision_at_5": 0.2,
+        "hit_rate_at_1": 1.0,
+        "hit_rate_at_3": 1.0,
+        "hit_rate_at_5": 1.0,
+        "mrr": 1.0,
+        "diversity_at_5": 1.0,
+        "retrieval_time_ms": 126.193,
+        "documents": [
+          "incident-inc-010",
+          "arch-dependency-graph",
+          "api-payment",
+          "ts-storage-failures",
+          "incident-inc-020"
+        ]
+      }
+    ]
+  }
+}
