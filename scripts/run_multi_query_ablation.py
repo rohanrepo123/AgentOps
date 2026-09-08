@@ -182,6 +182,15 @@ def evaluate(
                 "retrieval_queries": (
                     response.retrieval_queries
                 ),
+                "candidate_pool_size": (
+                    response.candidate_pool_size
+                ),
+                "raw_candidate_count": (
+                    response.raw_candidate_count
+                                ),
+                "unique_candidate_documents": (
+                    response.unique_candidate_documents
+                ),
                 "recall_at_1": recall_at_k(
                     results,
                     relevant_documents,
@@ -300,7 +309,20 @@ def evaluate(
             for item in per_query
         ),
         "per_query": per_query,
-    }
+        "mean_candidate_pool_size": mean(
+        item["candidate_pool_size"]
+        for item in per_query
+        ),
+
+        "mean_unique_candidate_documents": mean(
+            item["unique_candidate_documents"]
+            for item in per_query
+        ),
+        "mean_raw_candidate_count": mean(
+            item["raw_candidate_count"]
+            for item in per_query
+        ),
+                }
 
 
 def main() -> None:

@@ -25,12 +25,39 @@ class RetrievalResponse(BaseModel):
     """Complete response returned by the retrieval pipeline."""
 
     query: str
+
     retrieval_queries: list[str] = Field(
         default_factory=list,
         description="Queries used for candidate retrieval.",
     )
+
+    raw_candidate_count: int = Field(
+        default=0,
+        description=(
+            "Total number of candidates returned by FAISS "
+            "across all retrieval queries before deduplication."
+        ),
+    )
+
+    candidate_pool_size: int = Field(
+        default=0,
+        description=(
+            "Number of unique retrieved chunks after "
+            "merging and deduplication."
+        ),
+    )
+
+    unique_candidate_documents: int = Field(
+        default=0,
+        description=(
+            "Number of unique source documents represented "
+            "in the candidate pool."
+        ),
+    )
+
     results: list[RetrievalResult] = Field(
         default_factory=list
     )
+
     total_results: int = 0
     retrieval_time_ms: float = 0.0

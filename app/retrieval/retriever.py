@@ -136,7 +136,7 @@ class DocumentRetriever:
         )
 
         candidate_map: dict[tuple[str, str], RetrievalResult] = {}
-
+        raw_candidate_count = 0
         for retrieval_query in retrieval_queries:
 
             raw_results = (
@@ -145,6 +145,7 @@ class DocumentRetriever:
                     k=search_k,
                 )
             )
+            raw_candidate_count += len(raw_results)
 
             for document, score in raw_results:
 
@@ -222,42 +223,14 @@ class DocumentRetriever:
 
 
         candidates = list(candidate_map.values())
+        candidate_pool_size = len(candidates)
 
-
-
-        candidates: list[RetrievalResult] = []
-
-        for document, score in raw_results:
-            metadata = document.metadata
-
-            if service is not None:
-                document_service = metadata.get("service")
-                related_services = metadata.get("related_services", [])
-                if (
-                    document_service != service
-                    and service not in related_services
-                ):
-                    continue
-
-            if (
-                category is not None
-                and metadata.get("category") != category
-            ):
-                continue
-
-            candidates.append(
-                RetrievalResult(
-                    content=document.page_content,
-                    score=float(score),
-                    document_id=str(metadata.get("document_id", "unknown")),
-                    source=str(metadata.get("source", "unknown")),
-                    category=str(metadata.get("category", "unknown")),
-                    document_type=str(metadata.get("document_type", "unknown")),
-                    service=metadata.get("service"),
-                    chunk_id=metadata.get("chunk_id"),
-                    metadata=metadata,
-                )
-            )
+        unique_candidate_documents = len(
+            {
+                candidate.document_id
+                for candidate in candidates
+            }
+        )
 
         # Apply reranker to the full candidate pool.
         if self.reranker is not None:
@@ -282,6 +255,9 @@ class DocumentRetriever:
         return RetrievalResponse(
             query=original_query,
             retrieval_queries=retrieval_queries,
+            raw_candidate_count=raw_candidate_count,
+            candidate_pool_size=candidate_pool_size,
+            unique_candidate_documents=unique_candidate_documents,
             results=results,
             total_results=len(results[:top_k]),
         )
