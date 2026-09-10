@@ -76,3 +76,38 @@ def search_documentation(
         )
 
     return "\n\n".join(output)
+
+@tool
+def search_logs(
+    query: str,
+    service: Optional[str] = None,
+    level: Optional[str] = None,
+    limit: int = 20,
+) -> str:
+    """
+    Search AcmeCloud operational logs.
+
+    Use this tool to investigate:
+    - errors
+    - exceptions
+    - retries
+    - timeouts
+    - authentication failures
+    - queue processing failures
+    - request failures
+
+    Do not use this tool for documentation or aggregate metrics.
+    """
+
+    if not query.strip():
+        raise ValueError("Log search query cannot be empty.")
+
+    if limit <= 0:
+        raise ValueError("limit must be greater than 0.")
+
+    # Database-backed implementation comes next.
+    return (
+        "search_logs is not implemented yet. "
+        "The tool contract is intentionally defined before "
+        "connecting it to the operational data layer."
+    )
