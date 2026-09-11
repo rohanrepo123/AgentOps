@@ -1,11 +1,13 @@
 from __future__ import annotations
 
+import json
 import os
+from typing import Any
 
-from langchain_openai import ChatOpenAI
 from langchain_ollama import ChatOllama
 from pydantic import BaseModel, Field
-
+from langchain_openai import ChatOpenAI
+from langchain_openrouter import ChatOpenRouter
 from app.agents.state import InvestigationState
 
 
@@ -24,21 +26,30 @@ class PlannerDecision(BaseModel):
 
     action: str = Field(
         description=(
-            "The next investigation action. "
-            "Must be one of the allowed tool names or finish."
+            "The single next investigation action. "
+            "Must be one of the allowed action names."
         )
+    )
+
+    arguments: dict[str, Any] = Field(
+        default_factory=dict,
+        description=(
+            "Arguments required by the selected action. "
+            "Use only arguments supported by that action."
+        ),
     )
 
     reason: str = Field(
         description=(
-            "Why this action is the most useful next step "
-            "given the current evidence."
+            "Why this action and these arguments are the "
+            "most useful next investigation step."
         )
     )
 
 
+def _get_planner_model() -> ChatOpenRouter:
 # def _get_planner_model() -> ChatOpenAI:
-def _get_planner_model() -> ChatOllama:
+# def _get_planner_model() -> ChatOllama:
     """
     Create the LLM used by the investigation planner.
 
@@ -48,25 +59,21 @@ def _get_planner_model() -> ChatOllama:
     model_name = os.getenv(
         "AGENTOPS_PLANNER_MODEL",
         # "gpt-4.1-mini",
-        "nemotron-3-super:cloud",
+        # "nemotron-3-super:cloud",
+        "inclusionai/ling-3.0-flash-fin:free",
     )
 
-    return ChatOllama(
+    return ChatOpenRouter(
         model=model_name,
         temperature=0,
     )
 
 
+
 def _format_evidence(
     state: InvestigationState,
 ) -> str:
-    """
-    Create a compact planner context from collected evidence.
-
-    We deliberately truncate individual evidence items so that
-    operational logs and database records do not consume the
-    planner's entire context window.
-    """
+    """Format collected evidence into compact planner context."""
 
     evidence = state.get("evidence", [])
 
@@ -80,7 +87,10 @@ def _format_evidence(
         content = item.get("content", "")
 
         if len(content) > 2500:
-            content = content[:2500] + "\n...[truncated]"
+            content = (
+                content[:2500]
+                + "\n...[truncated]"
+            )
 
         sections.append(
             "\n".join(
@@ -97,6 +107,35 @@ def _format_evidence(
     return "\n\n".join(sections)
 
 
+def _format_previous_actions(
+    state: InvestigationState,
+) -> str:
+    """Show previous tool calls and their outcomes."""
+
+    tool_calls = state.get("tool_calls", [])
+
+    if not tool_calls:
+        return "No tools have been called yet."
+    
+    lines: list[str] = []
+
+    for call in tool_calls:
+        lines.append(
+            json.dumps(
+                {
+                    "tool": call.get("tool_name"),
+                    "input": call.get("input"),
+                    "success": call.get("success"),
+                    "result": call.get("output_summary"),
+                },
+                default=str,
+            )
+        )
+
+
+    return "\n".join(lines)
+
+
 def _build_prompt(
     state: InvestigationState,
 ) -> str:
@@ -107,55 +146,307 @@ def _build_prompt(
     severity = state.get("severity")
 
     evidence_context = _format_evidence(state)
-
-    available_actions = ", ".join(
-        sorted(ALLOWED_ACTIONS)
-    )
+    previous_actions = _format_previous_actions(state)
 
     return f"""
+
 You are the investigation planner for AgentOps.
 
-Your job is to decide the SINGLE most useful next investigation
-action for the current production incident.
+Your task is to choose the SINGLE most useful next investigation
+action and provide the exact arguments required for that action.
 
-Incident:
+INCIDENT
 {incident}
 
-Affected service:
+AFFECTED SERVICE
 {service or "unknown"}
 
-Severity:
+SEVERITY
 {severity or "unknown"}
 
-Available actions:
-{available_actions}
+ALLOWED ACTIONS
+- check_service_health
+- search_logs
+- query_metrics
+- query_database
+- search_documentation
+- finish
 
-Current evidence:
+AVAILABLE ARGUMENT SCHEMAS
+
+1. check_service_health
+{{
+  "service_id": "<service id>"
+}}
+
+2. search_logs
+{{
+  "query": "<keyword or phrase>",
+  "service_id": "<optional service id>",
+  "level": "<optional DEBUG|INFO|WARN|ERROR|CRITICAL>",
+  "event_type": "<optional event type>",
+  "start_time": "<optional timestamp>",
+  "end_time": "<optional timestamp>",
+  "trace_id": "<optional trace id>",
+  "request_id": "<optional request id>",
+  "user_id": "<optional user id>",
+  "limit": <optional integer <= 100>
+}}
+
+3. query_metrics
+
+Allowed metric names:
+- cpu_usage
+- error_rate
+- memory_usage
+- p95_latency_ms
+- queue_depth
+- request_rate
+- retry_rate
+
+Arguments:
+{{
+  "metric_name": "<allowed metric>",
+  "service_id": "<optional service id>",
+  "environment": "<optional environment>",
+  "start_time": "<optional timestamp>",
+  "end_time": "<optional timestamp>",
+  "aggregation": "<avg|min|max|sum|count>"
+}}
+
+4. query_database
+
+Allowed entities and their filterable columns:
+
+- services
+  columns:
+  service_id, service_name, owner_team, version, status, region
+
+- service_dependencies
+  columns:
+  dependency_id, source_service, target_service,
+  dependency_type, criticality, timeout_ms
+
+- users
+  columns:
+  user_id, email, plan, country, account_status, created_at
+
+- subscriptions
+  columns:
+  subscription_id, user_id, plan, status, started_at, cancelled_at
+
+- payments
+  columns:
+  payment_id, user_id, subscription_id, transaction_id,
+  amount, currency, provider, status, idempotency_key, created_at
+
+- payment_attempts
+  columns:
+  attempt_id, payment_id, attempt_number,
+  provider_request_id, result, latency_ms,
+  error_code, created_at
+
+- api_requests
+  columns:
+  request_id, service_id, user_id, method, endpoint,
+  status_code, latency_ms, trace_id, created_at
+
+- metric_samples
+  columns:
+  sample_id, service_id, metric_name, metric_value,
+  unit, environment, recorded_at
+
+- log_entries
+  columns:
+  log_id, timestamp, service_id, level, event_type,
+  trace_id, request_id, user_id
+
+- deployments
+  columns:
+  deployment_id, service_id, version, previous_version,
+  environment, deployed_by, status, deployed_at
+
+- incidents
+  columns:
+  incident_id, title, description, severity,
+  status, affected_service, start_time, resolved_time
+
+- incident_events
+  columns:
+  event_id, incident_id, event_time, event_type, source
+
+- incident_evidence
+  columns:
+  evidence_id, incident_id, evidence_type,
+  reference_id, relevance
+
+- feature_flags
+  columns:
+  flag_id, flag_name, service_id, enabled,
+  rollout_percentage, updated_at
+
+- runbooks
+  columns:
+  runbook_id, title, service_id,
+  trigger_condition, last_updated
+
+Important database rules:
+- Only use filter columns belonging to the selected entity.
+- Never invent a column.
+- Filters currently support EXACT equality only.
+- Do NOT use operators such as $gte, $lte, $gt, $lt, $in, or $ne.
+- Do not use service_id for payment_attempts.
+- For service-specific payment investigation:
+  query payments or use payment_id to inspect payment_attempts.
+- Never expose incidents.ground_truth_root_cause or incidents.resolution.
+
+5. search_documentation
+{{
+  "query": "<investigation query>",
+  "service": "<optional service id>"
+}}
+
+6. finish
+Use:
+{{
+  "arguments": {{}}
+}}
+
+CURRENT EVIDENCE
 {evidence_context}
 
-Investigation rules:
+PREVIOUS TOOL CALLS
+{previous_actions}
 
-1. Prefer actions that gather NEW information.
-2. Do not repeatedly call the same tool unless the existing
-   evidence indicates a more targeted second investigation
-   would be useful.
-3. Correlate evidence across services, logs, metrics,
-   deployments, database state, and documentation.
-4. Do not assume a root cause without supporting evidence.
-5. Choose "finish" only when the evidence is sufficient
-   to support a plausible root-cause analysis.
-6. Never expose or request evaluation-only ground-truth fields.
-7. Return exactly one next action.
+INVESTIGATION RULES
+
+1. Choose the action that gives the highest information value.
+2. Prefer NEW evidence over repeating an already successful query.
+3. Use previous evidence to refine the next query.
+4. Correlate multiple signal types instead of relying on one source.
+5. When evidence points to a specific service, inspect that service.
+6. For payment incidents, payment attempts, retry rate, logs,
+   idempotency configuration, and deployments may be especially relevant.
+7. For latency incidents, inspect p95 latency, error rate,
+   dependencies, logs, and recent deployments.
+8. Do not invent database columns.
+9. Do not request unrestricted SQL.
+10. Never request or expose evaluation-only ground-truth fields.
+11. Choose "finish" only when the collected evidence is sufficient
+    to support a defensible root-cause analysis.
+12. Return exactly one action.
+13. Arguments must match the selected action's schema.
+
+Filters currently support exact equality only.
+
+Valid:
+{{"status": "FAILED"}}
+
+Invalid:
+{{"created_at": {{"$gte": "2026-09-01T00:00:00"}}}}
+
+Do not use:
+$gte
+$lte
+$gt
+$lt
+$in
+$ne
+
 """
+
+
+def _validate_arguments(
+    decision: PlannerDecision,
+) -> None:
+    """Validate planner arguments before the graph executes them."""
+
+    action = decision.action
+    arguments = decision.arguments
+
+    if action not in ALLOWED_ACTIONS:
+        raise ValueError(
+            f"Planner returned unsupported action: {action}"
+        )
+
+    if not isinstance(arguments, dict):
+        raise ValueError(
+            "Planner arguments must be a dictionary."
+        )
+
+    required_fields = {
+        "check_service_health": {"service_id"},
+        "search_logs": set(),
+        "query_metrics": {"metric_name"},
+        "query_database": {"entity"},
+        "search_documentation": {"query"},
+        "finish": set(),
+    }
+
+    missing = (
+        required_fields[action]
+        - set(arguments.keys())
+    )
+
+    if missing:
+        raise ValueError(
+            f"Planner action '{action}' is missing "
+            f"required arguments: {sorted(missing)}"
+        )
+
+    if action == "query_metrics":
+
+        allowed_metrics = {
+            "cpu_usage",
+            "error_rate",
+            "memory_usage",
+            "p95_latency_ms",
+            "queue_depth",
+            "request_rate",
+            "retry_rate",
+        }
+
+        metric_name = arguments.get(
+            "metric_name"
+        )
+
+        if metric_name not in allowed_metrics:
+            raise ValueError(
+                f"Unsupported metric_name: {metric_name}"
+            )
+
+    if action == "query_database":
+
+        allowed_entities = {
+            "services",
+            "service_dependencies",
+            "users",
+            "subscriptions",
+            "payments",
+            "payment_attempts",
+            "api_requests",
+            "metric_samples",
+            "log_entries",
+            "deployments",
+            "incidents",
+            "incident_events",
+            "incident_evidence",
+            "feature_flags",
+            "runbooks",
+        }
+
+        entity = arguments.get("entity")
+
+        if entity not in allowed_entities:
+            raise ValueError(
+                f"Unsupported database entity: {entity}"
+            )
 
 
 def plan_next_action(
     state: InvestigationState,
 ) -> PlannerDecision:
-    """
-    Ask the LLM planner which investigation action should
-    happen next.
-    """
+    """Ask the LLM which tool to execute next."""
 
     model = _get_planner_model().with_structured_output(
         PlannerDecision
@@ -165,10 +456,6 @@ def plan_next_action(
         _build_prompt(state)
     )
 
-    if response.action not in ALLOWED_ACTIONS:
-        raise ValueError(
-            f"Planner returned unsupported action: "
-            f"{response.action}"
-        )
+    _validate_arguments(response)
 
     return response

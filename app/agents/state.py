@@ -56,6 +56,9 @@ class InvestigationState(TypedDict):
     recommendations: list[str]
 
     next_action: str | None
+    next_action_args: dict
     planner_reason: str | None
+
     investigation_complete: bool
     max_steps: int
+

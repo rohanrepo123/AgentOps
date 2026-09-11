@@ -56,6 +56,7 @@ def _append_tool_call(
             "input": tool_input,
             "output_summary": output[:1000],
             "success": success,
+            
         }
     )
 
@@ -101,16 +102,22 @@ def service_health_node(
             "Investigation state must contain a service."
         )
 
-    tool_input = {
-        "service_id": service,
-    }
+    tool_input = dict(
+        state.get(
+            "next_action_args",
+            {},
+        )
+    )
 
-    try:
-        output = check_service_health.invoke(tool_input)
-        success = True
-    except Exception as exc:
-        output = f"Service health lookup failed: {exc}"
-        success = False
+    if "service_id" not in tool_input:
+        tool_input["service_id"] = service
+
+        try:
+            output = check_service_health.invoke(tool_input)
+            success = True
+        except Exception as exc:
+            output = f"Service health lookup failed: {exc}"
+            success = False
 
     return {
         **state,
@@ -145,12 +152,22 @@ def logs_node(
     service = state.get("service")
     incident = state["incident"]
 
-    tool_input = {
-        "query": incident,
-        "service_id": service,
-        "level": "ERROR",
-        "limit": 20,
-    }
+    tool_input = dict(
+        state.get(
+            "next_action_args",
+            {},
+        )
+    )
+
+    tool_input.setdefault(
+        "service_id",
+        service,
+    )
+
+    tool_input.setdefault(
+        "limit",
+        20,
+    )
 
     try:
         output = search_logs.invoke(tool_input)
@@ -191,12 +208,27 @@ def metrics_node(
 
     service = state.get("service")
 
-    tool_input = {
-        "metric_name": "p95_latency_ms",
-        "service_id": service,
-        "environment": "production",
-        "aggregation": "avg",
-    }
+    tool_input = dict(
+        state.get(
+            "next_action_args",
+            {},
+        )
+    )
+
+    tool_input.setdefault(
+        "service_id",
+        service,
+    )
+
+    tool_input.setdefault(
+        "environment",
+        "production",
+    )
+
+    tool_input.setdefault(
+        "aggregation",
+        "avg",
+    )
 
     try:
         output = query_metrics.invoke(tool_input)
@@ -241,29 +273,43 @@ def database_node(
     by the adaptive planner.
     """
 
-    incident = state["incident"]
-    incident_lower = incident.lower()
+    # incident = state["incident"]
+    # incident_lower = incident.lower()
 
-    if "payment" in incident_lower or "charge" in incident_lower:
-        entity = "payments"
+    # if "payment" in incident_lower or "charge" in incident_lower:
+    #     entity = "payments"
 
-    elif "subscription" in incident_lower or "upgrade" in incident_lower:
-        entity = "subscriptions"
+    # elif "subscription" in incident_lower or "upgrade" in incident_lower:
+    #     entity = "subscriptions"
 
-    elif "user" in incident_lower or "account" in incident_lower:
-        entity = "users"
+    # elif "user" in incident_lower or "account" in incident_lower:
+    #     entity = "users"
 
-    elif "deployment" in incident_lower or "release" in incident_lower:
-        entity = "deployments"
+    # elif "deployment" in incident_lower or "release" in incident_lower:
+    #     entity = "deployments"
 
-    else:
-        entity = "api_requests"
+    # else:
+    #     entity = "api_requests"
 
-    tool_input = {
-        "entity": entity,
-        "limit": 20,
-    }
+    # tool_input = {
+    #     "entity": entity,
+    #     "limit": 20,
+    # }
+    print(
+    "\n[DEBUG] database_node next_action_args:",
+    state.get("next_action_args"),
+)
+    tool_input = dict(
+    state.get(
+        "next_action_args",
+        {},
+        )
+    )
 
+    tool_input.setdefault(
+        "limit",
+        20,
+    )
     try:
         output = query_database.invoke(tool_input)
         success = True
@@ -289,7 +335,11 @@ def database_node(
         "investigation_steps": _append_step(
             state,
             action="query_database",
-            reason=f"Inspect operational entity '{entity}' relevant to the incident.",
+            reason=(
+                f"Inspect operational entity "
+                f"'{tool_input.get('entity', 'unknown')}' "
+                "using planner-selected filters."
+            ),
             result=output,
         ),
     }
@@ -303,10 +353,22 @@ def documentation_node(
     incident = state["incident"]
     service = state.get("service")
 
-    tool_input = {
-        "query": incident,
-        "service": service,
-    }
+    tool_input = dict(
+        state.get(
+            "next_action_args",
+            {},
+        )
+    )
+
+    tool_input.setdefault(
+        "query",
+        state["incident"],
+    )
+
+    tool_input.setdefault(
+        "service",
+        service,
+    )
 
     try:
         output = search_documentation.invoke(tool_input)
@@ -372,6 +434,10 @@ def planner_node(
         return {
             **state,
             "next_action": "finish",
+            "next_action_args": state.get(
+            "next_action_args",
+            {}
+        ),
             "planner_reason": (
                 "Maximum investigation step limit reached."
             ),
@@ -382,12 +448,19 @@ def planner_node(
     return {
         **state,
         "next_action": decision.action,
+        "next_action_args": state.get(
+            "next_action_args",
+            {}
+        ),
         "planner_reason": decision.reason,
         "investigation_steps": _append_step(
             state,
             action="planner",
             reason=decision.reason,
-            result=decision.action,
+            result=(
+                f"{decision.action} "
+                f"{decision.arguments}"
+            ),
         ),
     }
 

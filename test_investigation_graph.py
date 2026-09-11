@@ -3,12 +3,10 @@ from app.graph.workflow import build_investigation_graph
 
 graph = build_investigation_graph()
 
-
 initial_state = {
     "incident": (
         "Customers are being charged twice for some payments."
     ),
-
     "service": "svc-payment",
 
     "severity": "HIGH",
@@ -32,6 +30,8 @@ initial_state = {
     "recommendations": [],
 
     "next_action": None,
+    
+    "next_action_args": {},
 
     "planner_reason": None,
 
@@ -42,7 +42,6 @@ initial_state = {
 
 
 result = graph.invoke(initial_state)
-
 
 print("=" * 70)
 print("INVESTIGATION COMPLETE")
@@ -67,20 +66,23 @@ print("TOOL EXECUTION")
 print("=" * 70)
 
 for call in result["tool_calls"]:
-    print(
-        f"{call['tool_name']} "
-        f"-> "
-        f"{'SUCCESS' if call['success'] else 'FAILED'}"
+
+    status = (
+        "SUCCESS"
+        if call["success"]
+        else "FAILED"
     )
 
-print("\n" + "=" * 70)
-print("INVESTIGATION STEPS")
-print("=" * 70)
-
-for step in result["investigation_steps"]:
     print(
-        f"{step['step']}. "
-        f"{step['action']}"
+        f"\n{call['tool_name']} -> {status}"
+    )
+
+    print(
+        f"Input: {call['input']}"
+    )
+
+    print(
+        f"Output:\n{call['output_summary']}"
     )
 
 print("\n" + "=" * 70)
@@ -92,6 +94,25 @@ for item in result["evidence"]:
         f"- {item['evidence_type']}: "
         f"{item['source']}"
     )
+
+print("\n" + "=" * 70)
+print("PLANNER DECISIONS")
+print("=" * 70)
+
+for step in result["investigation_steps"]:
+
+    if step["action"] == "planner":
+
+        print(
+            f"Step {step['step']}: "
+            f"{step['result']}"
+        )
+
+        print(
+            f"Reason: {step['reason']}"
+        )
+
+        print()
 
 print("\n" + "=" * 70)
 print("PLANNER DECISIONS")
