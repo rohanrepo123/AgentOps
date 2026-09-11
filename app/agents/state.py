@@ -7,9 +7,8 @@ class EvidenceItem(TypedDict, total=False):
     source: str
     evidence_type: str
     content: str
-    timestamp: str
-    service: str
-    confidence: float
+    service: str | None
+    timestamp: str | None
     metadata: dict
 
 
@@ -36,36 +35,27 @@ class InvestigationStep(TypedDict, total=False):
 
 
 class InvestigationState(TypedDict):
-    """
-    Shared state passed through the LangGraph investigation workflow.
-    """
-
-    # Original incident reported by the user.
     incident: str
 
-    # Working investigation context.
     service: str | None
     severity: str | None
 
-    # Evidence collected from tools.
     evidence: list[EvidenceItem]
-
-    # Current competing explanations.
     hypotheses: list[Hypothesis]
 
-    # Audit trail of tool calls.
     tool_calls: list[ToolCallRecord]
-
-    # Human-readable investigation history.
     investigation_steps: list[InvestigationStep]
 
-    # Current investigation status.
     status: str
 
-    # Whether enough evidence exists to stop investigation.
     evidence_sufficient: bool
 
-    # Final outputs.
     root_cause: str | None
     root_cause_confidence: float | None
+
     recommendations: list[str]
+
+    next_action: str | None
+    planner_reason: str | None
+    investigation_complete: bool
+    max_steps: int

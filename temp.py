@@ -145,49 +145,28 @@
 
 # print(result)
 # Metrice.py
-from app.tools.metrics import query_metrics
+# from app.tools.metrics import query_metrics
 
 
-print("=" * 60)
-print("AVERAGE METRIC")
-print("=" * 60)
+# print("=" * 60)
+# print("AVERAGE METRIC")
+# print("=" * 60)
 
-result = query_metrics.invoke(
-    {
-        "metric_name": "api_latency",
-    }
-)
+# result = query_metrics.invoke(
+#     {
+#         "metric_name": "api_latency",
+#     }
+# )
 
-print(result)
+# print(result)
 
-
-print("\n" + "=" * 60)
-print("SERVICE METRIC")
-print("=" * 60)
-
-result = query_metrics.invoke(
-    {
-        "metric_name": "p95_latency_ms",
-        "service_id": "incident",
-    }
-)
-
-print(result)
-
-
-print("\n" + "=" * 60)
-print("MAX METRIC")
-print("=" * 60)
-
-result = query_metrics.invoke(
-    {
-        "metric_name": "p95_latency_ms",
-        "service_id": "incident",
-        "aggregation": "max",
-    }
-)
-
-print(result)
+# cpu_usage: 504
+# error_rate: 507
+# memory_usage: 504
+# p95_latency_ms: 506
+# queue_depth: 505
+# request_rate: 504
+# retry_rate: 505
 
 # import sqlite3
 
@@ -195,14 +174,93 @@ print(result)
 
 # rows = conn.execute(
 #     """
-#     SELECT metric_name, COUNT(*)
+#     SELECT
+#         service_id,
+#         metric_name,
+#         metric_value,
+#         unit,
+#         environment,
+#         recorded_at
 #     FROM metric_samples
-#     GROUP BY metric_name
-#     ORDER BY metric_name
+#     LIMIT 10
 #     """
 # ).fetchall()
 
-# for metric_name, count in rows:
-#     print(f"{metric_name}: {count}")
+# for row in rows:
+#     print(row)
 
 # conn.close()
+# from app.tools.metrics import query_metrics
+
+
+# print("=" * 60)
+# print("AVERAGE P95 LATENCY")
+# print("=" * 60)
+
+# result = query_metrics.invoke(
+#     {
+#         "metric_name": "p95_latency_ms",
+#     }
+# )
+
+# print(result)
+
+# print("=" * 60)
+# print("SERVICE METRIC")
+# print("=" * 60)
+
+# result = query_metrics.invoke(
+#     {
+#         "metric_name": "p95_latency_ms",
+#         "service_id": "svc-api",
+#     }
+# )
+
+# print(result)
+# result = query_metrics.invoke(
+#     {
+#         "metric_name": "error_rate",
+#         "service_id": "svc-api",
+#         "aggregation": "avg",
+#     }
+# )
+
+# print(result)
+
+# import sqlite3
+
+# conn = sqlite3.connect("data/acmecloud.db")
+
+# rows = conn.execute(
+#     """
+#     SELECT
+#         service_id,
+#         service_name,
+#         status
+#     FROM services
+#     ORDER BY service_id
+#     """
+# ).fetchall()
+
+# for row in rows:
+#     print(row)
+
+# conn.close()
+
+from app.tools.service_health import check_service_health
+
+
+result = check_service_health.invoke(
+    {
+        "service_id": "svc-payment",
+    }
+)
+
+print(result)
+result = check_service_health.invoke(
+    {
+        "service_id": "svc-api",
+    }
+)
+
+print(result)
