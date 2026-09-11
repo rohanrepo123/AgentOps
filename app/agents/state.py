@@ -61,4 +61,3 @@ class InvestigationState(TypedDict):
 
     investigation_complete: bool
     max_steps: int
-

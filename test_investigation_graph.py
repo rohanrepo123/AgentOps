@@ -4,39 +4,27 @@ from app.graph.workflow import build_investigation_graph
 graph = build_investigation_graph()
 
 initial_state = {
-    "incident": (
-        "Customers are being charged twice for some payments."
-    ),
+    "incident": "Customers are being charged twice for some payments.",
     "service": "svc-payment",
-
     "severity": "HIGH",
 
     "evidence": [],
-
     "hypotheses": [],
-
     "tool_calls": [],
-
     "investigation_steps": [],
 
     "status": "investigating",
-
     "evidence_sufficient": False,
 
     "root_cause": None,
-
     "root_cause_confidence": None,
-
     "recommendations": [],
 
     "next_action": None,
-    
     "next_action_args": {},
-
     "planner_reason": None,
 
     "investigation_complete": False,
-
     "max_steps": 8,
 }
 

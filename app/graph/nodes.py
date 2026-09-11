@@ -175,7 +175,10 @@ def logs_node(
     except Exception as exc:
         output = f"Log search failed: {exc}"
         success = False
-
+    print(
+        "\n[DEBUG] logs_node next_action_args:",
+        state.get("next_action_args"),
+    )
     return {
         **state,
         "evidence": _append_evidence(
@@ -236,7 +239,10 @@ def metrics_node(
     except Exception as exc:
         output = f"Metric query failed: {exc}"
         success = False
-
+    print(
+        "\n[DEBUG] metrics_node next_action_args:",
+        state.get("next_action_args"),
+    )
     return {
         **state,
         "evidence": _append_evidence(
@@ -300,9 +306,9 @@ def database_node(
     state.get("next_action_args"),
 )
     tool_input = dict(
-    state.get(
-        "next_action_args",
-        {},
+        state.get(
+            "next_action_args",
+            {},
         )
     )
 
