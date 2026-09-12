@@ -8,7 +8,7 @@ from app.tools.documentation import search_documentation
 from app.tools.logs import search_logs
 from app.tools.metrics import query_metrics
 from app.tools.service_health import check_service_health
-
+from app.agents.hypothesis_agent import analyze_hypotheses
 
 def _append_evidence(
     state: InvestigationState,
@@ -492,3 +492,23 @@ def route_next_action(
         )
 
     return action
+
+def hypothesis_node(state: InvestigationState):
+
+    analysis = analyze_hypotheses(state)
+
+    hypotheses = []
+
+    for item in analysis.hypotheses:
+        hypotheses.append({
+            "hypothesis": item.hypothesis,
+            "confidence": item.confidence,
+            "supporting_evidence": item.supporting_evidence,
+            "contradicting_evidence": item.contradicting_evidence,
+            "status": item.status,
+        })
+
+    return {
+        **state,
+        "hypotheses": hypotheses,
+    }

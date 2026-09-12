@@ -344,6 +344,203 @@ def _format_rows(
     return "\n".join(output)
 
 
+def find_duplicate_payments(
+    service_id: str | None = None,
+    limit: int = 20,
+) -> str:
+    """
+    Find transaction/payment records that appear duplicated based on
+    user, amount, currency and closely spaced creation times.
+    """
+
+    limit = min(max(limit, 1), 100)
+
+    conn = _connect()
+
+    try:
+        query = """
+        SELECT
+            p1.payment_id AS payment_id_1,
+            p2.payment_id AS payment_id_2,
+            p1.user_id,
+            p1.amount,
+            p1.currency,
+            p1.provider,
+            p1.status AS status_1,
+            p2.status AS status_2,
+            p1.created_at AS created_at_1,
+            p2.created_at AS created_at_2,
+            p1.transaction_id AS transaction_id_1,
+            p2.transaction_id AS transaction_id_2,
+            p1.idempotency_key AS idempotency_key_1,
+            p2.idempotency_key AS idempotency_key_2
+        FROM payments p1
+        JOIN payments p2
+            ON p1.user_id = p2.user_id
+            AND p1.amount = p2.amount
+            AND p1.currency = p2.currency
+            AND p1.payment_id < p2.payment_id
+            AND ABS(
+                (julianday(p1.created_at) - julianday(p2.created_at))
+                * 86400
+            ) <= 60
+        ORDER BY p1.created_at DESC
+        LIMIT ?
+        """
+
+        rows = conn.execute(query, (limit,)).fetchall()
+
+        if not rows:
+            return "No potentially duplicate payments found."
+
+        lines = [
+            f"Potential duplicate payment pairs: {len(rows)}"
+        ]
+
+        for row in rows:
+            lines.append(
+                "\n".join([
+                    f"payment_1={row['payment_id_1']}",
+                    f"payment_2={row['payment_id_2']}",
+                    f"user_id={row['user_id']}",
+                    f"amount={row['amount']} {row['currency']}",
+                    f"provider={row['provider']}",
+                    f"status_1={row['status_1']}",
+                    f"status_2={row['status_2']}",
+                    f"created_1={row['created_at_1']}",
+                    f"created_2={row['created_at_2']}",
+                    f"transaction_1={row['transaction_id_1']}",
+                    f"transaction_2={row['transaction_id_2']}",
+                    f"idempotency_1={row['idempotency_key_1']}",
+                    f"idempotency_2={row['idempotency_key_2']}",
+                ])
+            )
+
+        return "\n\n".join(lines)
+
+    finally:
+        conn.close()
+
+def payment_attempt_history(
+    payment_id: str,
+    limit: int = 20,
+) -> str:
+    """
+    Retrieve the complete retry/attempt history for one payment.
+    """
+
+    limit = min(max(limit, 1), 100)
+
+    conn = _connect()
+
+    try:
+        query = """
+        SELECT
+            attempt_id,
+            payment_id,
+            attempt_number,
+            provider_request_id,
+            result,
+            latency_ms,
+            error_code,
+            created_at
+        FROM payment_attempts
+        WHERE payment_id = ?
+        ORDER BY attempt_number ASC
+        LIMIT ?
+        """
+
+        rows = conn.execute(
+            query,
+            (payment_id, limit),
+        ).fetchall()
+
+        if not rows:
+            return f"No payment attempts found for payment_id={payment_id}"
+
+        lines = [
+            f"Payment attempt history for {payment_id}:"
+        ]
+
+        for row in rows:
+            lines.append(
+                "\n".join([
+                    f"attempt_id={row['attempt_id']}",
+                    f"attempt_number={row['attempt_number']}",
+                    f"provider_request_id={row['provider_request_id']}",
+                    f"result={row['result']}",
+                    f"latency_ms={row['latency_ms']}",
+                    f"error_code={row['error_code']}",
+                    f"created_at={row['created_at']}",
+                ])
+            )
+
+        return "\n\n".join(lines)
+
+    finally:
+        conn.close()
+
+def recent_deployments(
+    service_id: str,
+    limit: int = 10,
+) -> str:
+    """
+    Retrieve recent deployments for a service.
+    """
+
+    limit = min(max(limit, 1), 50)
+
+    conn = _connect()
+
+    try:
+        query = """
+        SELECT
+            deployment_id,
+            service_id,
+            version,
+            previous_version,
+            environment,
+            deployed_by,
+            status,
+            change_summary,
+            deployed_at
+        FROM deployments
+        WHERE service_id = ?
+        ORDER BY deployed_at DESC
+        LIMIT ?
+        """
+
+        rows = conn.execute(
+            query,
+            (service_id, limit),
+        ).fetchall()
+
+        if not rows:
+            return f"No deployments found for service_id={service_id}"
+
+        lines = [
+            f"Recent deployments for {service_id}:"
+        ]
+
+        for row in rows:
+            lines.append(
+                "\n".join([
+                    f"deployment_id={row['deployment_id']}",
+                    f"version={row['version']}",
+                    f"previous_version={row['previous_version']}",
+                    f"environment={row['environment']}",
+                    f"deployed_by={row['deployed_by']}",
+                    f"status={row['status']}",
+                    f"change_summary={row['change_summary']}",
+                    f"deployed_at={row['deployed_at']}",
+                ])
+            )
+
+        return "\n\n".join(lines)
+
+    finally:
+        conn.close()
+
 # ---------------------------------------------------------------------
 # Tool
 # ---------------------------------------------------------------------

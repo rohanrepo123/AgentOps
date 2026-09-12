@@ -13,6 +13,7 @@ from app.graph.nodes import (
     planner_node,
     route_next_action,
     service_health_node,
+    hypothesis_node
 )
 
 
@@ -65,7 +66,10 @@ def build_investigation_graph():
         "finalize",
         finalize_node,
     )
-
+    graph.add_node(
+    "hypothesis",
+    hypothesis_node
+)
     # ---------------------------------------------------------------
     # Entry
     # ---------------------------------------------------------------
@@ -97,28 +101,33 @@ def build_investigation_graph():
     # ---------------------------------------------------------------
 
     graph.add_edge(
-        "service_health",
-        "planner",
-    )
-
-    graph.add_edge(
         "logs",
-        "planner",
+        "hypothesis"
     )
 
     graph.add_edge(
         "metrics",
-        "planner",
+        "hypothesis"
     )
 
     graph.add_edge(
         "database",
-        "planner",
+        "hypothesis"
     )
 
     graph.add_edge(
         "documentation",
-        "planner",
+        "hypothesis"
+    )
+
+    graph.add_edge(
+        "service_health",
+        "hypothesis"
+    )
+
+    graph.add_edge(
+        "hypothesis",
+        "planner"
     )
 
     # ---------------------------------------------------------------

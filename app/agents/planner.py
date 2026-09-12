@@ -16,10 +16,12 @@ ALLOWED_ACTIONS = {
     "search_logs",
     "query_metrics",
     "query_database",
+    "find_duplicate_payments",
+    "payment_attempt_history",
+    "recent_deployments",
     "search_documentation",
     "finish",
 }
-
 
 class PlannerDecision(BaseModel):
     """Structured decision produced by the investigation planner."""
@@ -147,6 +149,16 @@ def _build_prompt(
 
     evidence_context = _format_evidence(state)
     previous_actions = _format_previous_actions(state)
+    hypotheses_text = "\n".join(
+        f"""
+    Hypothesis: {h.get('hypothesis')}
+    Confidence: {h.get('confidence')}
+    Status: {h.get('status')}
+    Supporting evidence: {h.get('supporting_evidence')}
+    Contradicting evidence: {h.get('contradicting_evidence')}
+    """
+        for h in state.get("hypotheses", [])
+    )
 
     return f"""
 
@@ -163,6 +175,11 @@ AFFECTED SERVICE
 
 SEVERITY
 {severity or "unknown"}
+
+
+CURRENT HYPOTHESES
+------------------
+{hypotheses_text}
 
 ALLOWED ACTIONS
 - check_service_health
@@ -300,13 +317,44 @@ Important database rules:
   query payments or use payment_id to inspect payment_attempts.
 - Never expose incidents.ground_truth_root_cause or incidents.resolution.
 
-5. search_documentation
+5. find_duplicate_payments
+
+{
+  "service_id": "<service id>",
+  "limit": <optional integer <= 100>
+}
+
+Use this action when investigating possible duplicate
+payment transactions.
+
+6. payment_attempt_history
+
+{
+  "payment_id": "<payment id>",
+  "limit": <optional integer <= 100>
+}
+
+Use this action when investigating retries, timeouts,
+or multiple attempts for a specific payment.
+
+7. recent_deployments
+
+{
+  "service_id": "<service id>",
+  "limit": <optional integer <= 50>
+}
+
+Use this action when investigating whether a recent
+deployment may have contributed to the incident.
+
+
+8. search_documentation
 {{
   "query": "<investigation query>",
   "service": "<optional service id>"
 }}
 
-6. finish
+9. finish
 Use:
 {{
   "arguments": {{}}
@@ -353,6 +401,13 @@ $lt
 $in
 $ne
 
+
+Your next action must be selected based on the
+current hypotheses and the evidence gap.
+
+Do not repeat an investigation action unless:
+- it is required to validate a hypothesis, or
+- previous evidence was insufficient.
 """
 
 
@@ -379,6 +434,9 @@ def _validate_arguments(
         "search_logs": set(),
         "query_metrics": {"metric_name"},
         "query_database": {"entity"},
+        "find_duplicate_payments": set(),
+        "payment_attempt_history": {"payment_id"},
+        "recent_deployments": {"service_id"},
         "search_documentation": {"query"},
         "finish": set(),
     }
