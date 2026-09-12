@@ -60,14 +60,14 @@ def _get_planner_model() -> ChatOpenRouter:
         "AGENTOPS_PLANNER_MODEL",
         # "gpt-4.1-mini",
         # "nemotron-3-super:cloud",
-        "inclusionai/ling-3.0-flash-fin:free",
+        # "inclusionai/ling-3.0-flash-fin:free",
+        "nvidia/nemotron-3.5-lightning:free",
     )
 
     return ChatOpenRouter(
         model=model_name,
         temperature=0,
     )
-
 
 
 def _format_evidence(
@@ -455,6 +455,11 @@ def plan_next_action(
     response = model.invoke(
         _build_prompt(state)
     )
+
+    if response is None:
+        raise RuntimeError(
+            "Planner model returned no structured decision."
+        )
 
     _validate_arguments(response)
 
